@@ -43,7 +43,15 @@
     "processOptions": {
       "ignoredFiles": []
     },
-    "fileInfoCollection": [],
+    "fileInfoCollection": [
+      {
+        "editingStatus": "InProgress",
+        "testCaseId": "4b0f9b0d-1a13-4d4b-9f4f-87eb6d25b024",
+        "testCaseType": "TestCase",
+        "fileName": "ConvertExpenseClaimTests.cs",
+        "publishAsTestCase": true
+      }
+    ],
     "saveToCloud": false
   },
   "expressionLanguage": "CSharp",

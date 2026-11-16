@@ -9,7 +9,7 @@ namespace ExpenseClaimConverter
 {
     public static class ExpenseCsv
     {
-        private static readonly char[] CharactersRequiringQuotes = { ',', '"', '\r', '\n' };
+        private static readonly char[] CharactersRequiringQuotes = [ ',', '"', '\r', '\n' ];
 
         public static IReadOnlyList<ExpenseLine> Read(string inputPath)
         {
@@ -68,45 +68,42 @@ namespace ExpenseClaimConverter
                 Directory.CreateDirectory(outputDirectory);
             }
 
-            using (var writer = new StreamWriter(fullOutputPath, false, new UTF8Encoding(false)))
+            using var writer = new StreamWriter(fullOutputPath, false, new UTF8Encoding(false));
+            writer.WriteLine(SerializeRow(new[]
             {
-                writer.WriteLine(SerializeRow(new[]
-                {
-                    "LineId", "ExpenseDate", "Description", "Amount", "Currency",
-                    "Rate", "RateDate", "ConvertedAmount", "Status", "Message"
-                }));
+                "LineId", "ExpenseDate", "Description", "Amount", "Currency",
+                "Rate", "RateDate", "ConvertedAmount", "Status", "Message"
+            }));
 
-                foreach (var line in lines)
-                {
-                    writer.WriteLine(SerializeRow(new[]
-                    {
-                        line.LineId,
-                        line.ExpenseDate,
-                        line.Description,
-                        line.Amount,
-                        line.Currency,
-                        FormatDecimal(line.Rate, "0.#####"),
-                        line.RateDate.HasValue
-                            ? line.RateDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)
-                            : string.Empty,
-                        FormatDecimal(line.ConvertedAmount, "0.00"),
-                        line.Status,
-                        line.Message
-                    }));
-                }
-
-                var totalRow = new string[10];
-                totalRow[0] = "TOTAL";
-                totalRow[7] = total.ToString("0.00", CultureInfo.InvariantCulture);
-                totalRow[8] = "Total";
-                totalRow[9] = "Total in " + targetCurrency;
-                writer.WriteLine(SerializeRow(totalRow));
+            foreach (var line in lines)
+            {
+                writer.WriteLine(SerializeRow([
+                    line.LineId,
+                    line.ExpenseDate,
+                    line.Description,
+                    line.Amount,
+                    line.Currency,
+                    FormatDecimal(line.Rate, "0.#####"),
+                    line.RateDate.HasValue
+                        ? line.RateDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)
+                        : string.Empty,
+                    FormatDecimal(line.ConvertedAmount, "0.00"),
+                    line.Status,
+                    line.Message
+                ]));
             }
+
+            var totalRow = new string[10];
+            totalRow[0] = "TOTAL";
+            totalRow[7] = total.ToString("0.00", CultureInfo.InvariantCulture);
+            totalRow[8] = "Total";
+            totalRow[9] = "Total in " + targetCurrency;
+            writer.WriteLine(SerializeRow(totalRow));
         }
 
         private static Dictionary<string, int> BuildColumnIndexes(IReadOnlyList<string> header)
         {
-            var requiredColumns = new[] { "LineId", "ExpenseDate", "Description", "Amount", "Currency" };
+            string[] requiredColumns = [ "LineId", "ExpenseDate", "Description", "Amount", "Currency" ];
             var indexes = new Dictionary<string, int>(StringComparer.Ordinal);
 
             for (var index = 0; index < header.Count; index++)
@@ -135,8 +132,8 @@ namespace ExpenseClaimConverter
 
         private static List<List<string>> ParseRecords(string content)
         {
-            var records = new List<List<string>>();
-            var fields = new List<string>();
+            List<List<string>> records = [];
+            List<string> fields = [];
             var field = new StringBuilder();
             var inQuotes = false;
 
@@ -176,7 +173,7 @@ namespace ExpenseClaimConverter
                     fields.Add(field.ToString());
                     field.Clear();
                     records.Add(fields);
-                    fields = new List<string>();
+                    fields = [];
                     if (current == '\r' && index + 1 < content.Length && content[index + 1] == '\n')
                     {
                         index++;
@@ -188,7 +185,7 @@ namespace ExpenseClaimConverter
                 }
             }
 
-            if (field.Length > 0 || fields.Count > 0 || (content.Length > 0 && content[content.Length - 1] != '\n' && content[content.Length - 1] != '\r'))
+            if (field.Length > 0 || fields.Count > 0 || (content.Length > 0 && content[^1] != '\n' && content[^1] != '\r'))
             {
                 fields.Add(field.ToString());
                 records.Add(fields);

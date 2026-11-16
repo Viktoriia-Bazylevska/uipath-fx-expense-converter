@@ -17,7 +17,7 @@ namespace ExpenseClaimConverter
             int linesRead;
             var convertedCount = 0;
             var failedCount = 0;
-            var total = 0m;
+            decimal total;
 
             try
             {
@@ -49,9 +49,14 @@ namespace ExpenseClaimConverter
                     }
 
                     RateLookupResult lookup;
-                    if (validation.NormalizedCurrency == targetCurrency)
+                    if (ExpenseCalculator.IsSameCurrency(
+                            validation.NormalizedCurrency,
+                            targetCurrency))
                     {
-                        lookup = new RateLookupResult(true, 1m, validation.ExpenseDate, string.Empty);
+                        lookup = ExpenseCalculator.GetSameCurrencyRate(
+                            validation.NormalizedCurrency,
+                            targetCurrency,
+                            validation.ExpenseDate);
                     }
                     else
                     {
@@ -92,10 +97,10 @@ namespace ExpenseClaimConverter
                     line.ConvertedAmount = ExpenseCalculator.CalculateConvertedAmount(validation.Amount, lookup.Rate);
                     line.Status = "Converted";
                     line.Message = string.Empty;
-                    total += line.ConvertedAmount.Value;
                     convertedCount++;
                 }
 
+                total = ExpenseCalculator.CalculateTotal(lines);
                 ExpenseCsv.Write(outputPath, lines, total, targetCurrency);
                 Log("Expense conversion ended: linesRead=" + linesRead +
                     "; converted=" + convertedCount +

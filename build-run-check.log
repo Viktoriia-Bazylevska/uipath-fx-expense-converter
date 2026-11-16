@@ -1,0 +1,88 @@
+{
+  "AnalyzeResult": {
+    "Messages": [
+      {
+        "Description": "",
+        "ErrorSeverity": "Verbose"
+      },
+      {
+        "Description": "",
+        "ErrorSeverity": "Verbose"
+      },
+      {
+        "ErrorCode": "ST-ANA-003",
+        "Description": "Expand to see details",
+        "RuleName": "Project Workflow Count",
+        "FilePath": "project.json",
+        "ErrorSeverity": "Info",
+        "Recommendation": "Project workflow count:\r\n* Totals: 1 Folders and 2 workflows\r\n",
+        "DocumentationLink": "https://docs.uipath.com//studio/standalone/latest/user-guide/st-ana-003"
+      },
+      {
+        "ErrorCode": "ST-ANA-009",
+        "Description": "Expand to see details",
+        "RuleName": "File Activities Stats",
+        "FilePath": "C:\\Users\\bazyl\\Documents\\UiPath\\ExpenseClaimConverter\\GetExchangeRate.xaml",
+        "ErrorSeverity": "Info",
+        "Recommendation": "Activities: 58, Ifs: 8",
+        "DocumentationLink": "https://docs.uipath.com//studio/standalone/latest/user-guide/st-ana-009"
+      },
+      {
+        "ErrorCode": "ST-USG-034",
+        "Description": "Your organization requires your project to have an Automation Hub URL defined.",
+        "RuleName": "Automation Hub URL",
+        "ErrorSeverity": "Warning",
+        "Recommendation": "Use \u0022Project Settings\u0022 to add the missing information. [Learn more.](https://docs.uipath.com//studio/standalone/latest/user-guide/st-usg-034)",
+        "DocumentationLink": "https://docs.uipath.com//studio/standalone/latest/user-guide/st-usg-034"
+      },
+      {
+        "ErrorCode": "TA-DBP-002",
+        "Description": "Workflow Main.xaml does not have any assigned Test Cases.",
+        "RuleName": "Untested Workflows",
+        "WorkflowDisplayName": "Main",
+        "ErrorSeverity": "Info",
+        "Recommendation": "Creating Test Cases for your workflows allows you to run them frequently to discover potential issues early on before they are introduced in your production environment. [Learn more.](https://docs.uipath.com/activities/lang-/docs/ta-dbp-002)",
+        "DocumentationLink": "https://docs.uipath.com/activities/lang-/docs/ta-dbp-002"
+      },
+      {
+        "ErrorCode": "TA-DBP-002",
+        "Description": "Workflow GetExchangeRate.xaml does not have any assigned Test Cases.",
+        "RuleName": "Untested Workflows",
+        "WorkflowDisplayName": "GetExchangeRate",
+        "ErrorSeverity": "Info",
+        "Recommendation": "Creating Test Cases for your workflows allows you to run them frequently to discover potential issues early on before they are introduced in your production environment. [Learn more.](https://docs.uipath.com/activities/lang-/docs/ta-dbp-002)",
+        "DocumentationLink": "https://docs.uipath.com/activities/lang-/docs/ta-dbp-002"
+      },
+      {
+        "ErrorCode": "TA-DBP-003",
+        "Description": "The project should be connected to Test Manager in order to enable advanced tracking, reporting and management of test cases.",
+        "RuleName": "Test Manager Connected",
+        "ErrorSeverity": "Info",
+        "Recommendation": "The current project is not connected to Test Manager, which enables you to track, report and manage test cases, both automated and manual. In order to connect to Test Manager, please open the associated ribbon menu item, click on the Settings entry, and connect to your Test Manager instance. [Learn more.](https://docs.uipath.com/activities/lang-/docs/ta-dbp-003)",
+        "DocumentationLink": "https://docs.uipath.com/activities/lang-/docs/ta-dbp-003"
+      },
+      {
+        "Description": "",
+        "ErrorSeverity": "Verbose"
+      },
+      {
+        "ErrorCode": "ST-ANA-009",
+        "Description": "Expand to see details",
+        "RuleName": "File Activities Stats",
+        "FilePath": "C:\\Users\\bazyl\\Documents\\UiPath\\ExpenseClaimConverter\\Main.xaml",
+        "ErrorSeverity": "Info",
+        "Recommendation": "Activities: 1",
+        "DocumentationLink": "https://docs.uipath.com//studio/standalone/latest/user-guide/st-ana-009"
+      }
+    ],
+    "MetadataMessages": [
+      {
+        "MetadataId": "WB-MTD-001",
+        "MetadataName": "HTTP Request Metadata",
+        "MetadataType": "UseApplication",
+        "Metadata": "{\u0022ApplicationType\u0022:\u0022API\u0022,\u0022Url\u0022:{\u0022Value\u0022:\u0022requestUrl\u0022,\u0022IsExpression\u0022:true},\u0022MetadataType\u0022:1}",
+        "ErrorSeverity": "Verbose"
+      }
+    ]
+  }
+}

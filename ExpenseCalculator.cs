@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
@@ -6,7 +7,7 @@ namespace ExpenseClaimConverter
 {
     public static class ExpenseCalculator
     {
-        private static readonly Regex CurrencyCodePattern = new Regex(
+        private static readonly Regex CurrencyCodePattern = new(
             "^[A-Z]{3}$",
             RegexOptions.CultureInvariant | RegexOptions.Compiled);
 
@@ -20,19 +21,47 @@ namespace ExpenseClaimConverter
             return !string.IsNullOrWhiteSpace(value) && CurrencyCodePattern.IsMatch(value);
         }
 
+        public static bool IsSameCurrency(string baseCurrency, string quoteCurrency)
+        {
+            return string.Equals(
+                NormalizeCurrency(baseCurrency),
+                NormalizeCurrency(quoteCurrency),
+                StringComparison.Ordinal);
+        }
+
+        public static RateLookupResult GetSameCurrencyRate(
+            string baseCurrency,
+            string quoteCurrency,
+            DateTime rateDate)
+        {
+            if (!IsSameCurrency(baseCurrency, quoteCurrency))
+            {
+                return new(
+                    false,
+                    0m,
+                    rateDate,
+                    "Currencies differ.");
+            }
+
+            return new(
+                true,
+                1m,
+                rateDate.Date,
+                string.Empty);
+        }
+
         public static ValidationResult Validate(ExpenseLine line, DateTime today)
         {
             if (line == null)
             {
-                return new ValidationResult { Message = "Line is required." };
+                return new() { Message = "Line is required." };
             }
 
-            decimal amount;
             if (!decimal.TryParse(
                     (line.Amount ?? string.Empty).Trim(),
                     NumberStyles.Number,
                     CultureInfo.InvariantCulture,
-                    out amount) || amount <= 0m)
+                    out var amount) || amount <= 0m)
             {
                 return new ValidationResult { Message = "Amount must be a number greater than 0." };
             }
@@ -40,27 +69,26 @@ namespace ExpenseClaimConverter
             var normalizedCurrency = NormalizeCurrency(line.Currency);
             if (!IsValidCurrency(normalizedCurrency))
             {
-                return new ValidationResult { Message = "Currency must be exactly 3 letters." };
+                return new() { Message = "Currency must be exactly 3 letters." };
             }
 
-            DateTime expenseDate;
             if (!DateTime.TryParseExact(
                     (line.ExpenseDate ?? string.Empty).Trim(),
                     "yyyy-MM-dd",
                     CultureInfo.InvariantCulture,
                     DateTimeStyles.None,
-                    out expenseDate))
+                    out var expenseDate))
             {
-                return new ValidationResult { Message = "Invalid date format, expected yyyy-MM-dd" };
+                return new() { Message = "Invalid date format, expected yyyy-MM-dd" };
             }
 
             expenseDate = expenseDate.Date;
             if (expenseDate > today.Date)
             {
-                return new ValidationResult { Message = "ExpenseDate must not be in the future." };
+                return new() { Message = "ExpenseDate must not be in the future." };
             }
 
-            return new ValidationResult
+            return new()
             {
                 IsValid = true,
                 Amount = amount,
@@ -73,6 +101,27 @@ namespace ExpenseClaimConverter
         public static decimal CalculateConvertedAmount(decimal amount, decimal rate)
         {
             return Math.Round(amount * rate, 2, MidpointRounding.AwayFromZero);
+        }
+
+        public static decimal CalculateTotal(IReadOnlyList<ExpenseLine> lines)
+        {
+            var total = 0m;
+            if (lines == null)
+            {
+                return total;
+            }
+
+            foreach (var line in lines)
+            {
+                if (line != null &&
+                    string.Equals(line.Status, "Converted", StringComparison.Ordinal) &&
+                    line.ConvertedAmount.HasValue)
+                {
+                    total += line.ConvertedAmount.Value;
+                }
+            }
+
+            return total;
         }
 
         public static string CreateRateCacheKey(string normalizedCurrency, DateTime expenseDate)
@@ -91,19 +140,15 @@ namespace ExpenseClaimConverter
         public string Message { get; set; } = string.Empty;
     }
 
-    public sealed class RateLookupResult
+    public sealed class RateLookupResult(
+        bool success,
+        decimal rate,
+        DateTime rateDate,
+        string errorMessage)
     {
-        public RateLookupResult(bool success, decimal rate, DateTime rateDate, string errorMessage)
-        {
-            Success = success;
-            Rate = rate;
-            RateDate = rateDate;
-            ErrorMessage = errorMessage ?? string.Empty;
-        }
-
-        public bool Success { get; }
-        public decimal Rate { get; }
-        public DateTime RateDate { get; }
-        public string ErrorMessage { get; }
+        public bool Success { get; } = success;
+        public decimal Rate { get; } = rate;
+        public DateTime RateDate { get; } = rateDate;
+        public string ErrorMessage { get; } = errorMessage ?? string.Empty;
     }
 }
