@@ -2,7 +2,7 @@
   "name": "ExpenseClaimConverter",
   "projectId": "27cf06c2-0bc2-4a04-9fdd-5c617332f885",
   "description": "ExpenseClaimConverter, Frankfurter API",
-  "main": "Main.xaml",
+  "main": "ConvertExpenseClaim.cs",
   "dependencies": {
     "UiPath.Excel.Activities": "[3.6.1]",
     "UiPath.Mail.Activities": "[2.12.10]",
@@ -49,9 +49,25 @@
   "expressionLanguage": "CSharp",
   "entryPoints": [
     {
-      "filePath": "Main.xaml",
-      "uniqueId": "a18c6fae-1c33-4edb-a225-32810d05ea03",
-      "input": [],
+      "filePath": "ConvertExpenseClaim.cs",
+      "uniqueId": "d53b4c5a-f08d-4a5d-90ba-a6ec386c18fa",
+      "input": [
+        {
+          "name": "in_InputPath",
+          "type": "System.String",
+          "required": false
+        },
+        {
+          "name": "in_OutputPath",
+          "type": "System.String",
+          "required": false
+        },
+        {
+          "name": "in_TargetCurrency",
+          "type": "System.String",
+          "required": false
+        }
+      ],
       "output": []
     }
   ],

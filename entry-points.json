@@ -2,9 +2,34 @@
   "$schema": "https://cloud.uipath.com/draft/2024-12/entry-point",
   "entryPoints": [
     {
-      "filePath": "Main.xaml",
-      "uniqueId": "a18c6fae-1c33-4edb-a225-32810d05ea03",
-      "type": "process"
+      "filePath": "ConvertExpenseClaim.cs",
+      "uniqueId": "d53b4c5a-f08d-4a5d-90ba-a6ec386c18fa",
+      "type": "process",
+      "input": {
+        "type": "object",
+        "properties": {
+          "in_InputPath": {
+            "type": "string",
+            "x-default-expression": "\"Data/Input/expenses.csv\"",
+            "default": "Data/Input/expenses.csv"
+          },
+          "in_OutputPath": {
+            "type": "string",
+            "x-default-expression": "\"Data/Output/expenses_converted.csv\"",
+            "default": "Data/Output/expenses_converted.csv"
+          },
+          "in_TargetCurrency": {
+            "type": "string",
+            "x-default-expression": "\"EUR\"",
+            "default": "EUR"
+          }
+        },
+        "required": [
+          "in_InputPath",
+          "in_OutputPath",
+          "in_TargetCurrency"
+        ]
+      }
     }
   ]
 }
