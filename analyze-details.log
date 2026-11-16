@@ -16,7 +16,7 @@
         "RuleName": "File Activities Stats",
         "FilePath": "C:\\Users\\bazyl\\Documents\\UiPath\\ExpenseClaimConverter\\GetExchangeRate.xaml",
         "ErrorSeverity": "Info",
-        "Recommendation": "Activities: 33, Ifs: 4",
+        "Recommendation": "Activities: 35, Ifs: 4",
         "DocumentationLink": "https://docs.uipath.com//studio/standalone/latest/user-guide/st-ana-009"
       },
       {
