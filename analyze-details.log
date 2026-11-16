@@ -1,0 +1,69 @@
+{
+  "AnalyzeResult": {
+    "Messages": [
+      {
+        "ErrorCode": "ST-ANA-003",
+        "Description": "Expand to see details",
+        "RuleName": "Project Workflow Count",
+        "FilePath": "project.json",
+        "ErrorSeverity": "Info",
+        "Recommendation": "Project workflow count:\r\n* Totals: 1 Folders and 2 workflows\r\n",
+        "DocumentationLink": "https://docs.uipath.com//studio/standalone/latest/user-guide/st-ana-003"
+      },
+      {
+        "ErrorCode": "ST-ANA-009",
+        "Description": "Expand to see details",
+        "RuleName": "File Activities Stats",
+        "FilePath": "C:\\Users\\bazyl\\Documents\\UiPath\\ExpenseClaimConverter\\GetExchangeRate.xaml",
+        "ErrorSeverity": "Info",
+        "Recommendation": "Activities: 33, Ifs: 4",
+        "DocumentationLink": "https://docs.uipath.com//studio/standalone/latest/user-guide/st-ana-009"
+      },
+      {
+        "ErrorCode": "TA-DBP-002",
+        "Description": "Workflow Main.xaml does not have any assigned Test Cases.",
+        "RuleName": "Untested Workflows",
+        "WorkflowDisplayName": "Main",
+        "ErrorSeverity": "Info",
+        "Recommendation": "Creating Test Cases for your workflows allows you to run them frequently to discover potential issues early on before they are introduced in your production environment. [Learn more.](https://docs.uipath.com/activities/lang-/docs/ta-dbp-002)",
+        "DocumentationLink": "https://docs.uipath.com/activities/lang-/docs/ta-dbp-002"
+      },
+      {
+        "ErrorCode": "TA-DBP-002",
+        "Description": "Workflow GetExchangeRate.xaml does not have any assigned Test Cases.",
+        "RuleName": "Untested Workflows",
+        "WorkflowDisplayName": "GetExchangeRate",
+        "ErrorSeverity": "Info",
+        "Recommendation": "Creating Test Cases for your workflows allows you to run them frequently to discover potential issues early on before they are introduced in your production environment. [Learn more.](https://docs.uipath.com/activities/lang-/docs/ta-dbp-002)",
+        "DocumentationLink": "https://docs.uipath.com/activities/lang-/docs/ta-dbp-002"
+      },
+      {
+        "ErrorCode": "ST-USG-034",
+        "Description": "Your organization requires your project to have an Automation Hub URL defined.",
+        "RuleName": "Automation Hub URL",
+        "ErrorSeverity": "Warning",
+        "Recommendation": "Use \u0022Project Settings\u0022 to add the missing information. [Learn more.](https://docs.uipath.com//studio/standalone/latest/user-guide/st-usg-034)",
+        "DocumentationLink": "https://docs.uipath.com//studio/standalone/latest/user-guide/st-usg-034"
+      },
+      {
+        "ErrorCode": "ST-ANA-009",
+        "Description": "Expand to see details",
+        "RuleName": "File Activities Stats",
+        "FilePath": "C:\\Users\\bazyl\\Documents\\UiPath\\ExpenseClaimConverter\\Main.xaml",
+        "ErrorSeverity": "Info",
+        "Recommendation": "Activities: 0",
+        "DocumentationLink": "https://docs.uipath.com//studio/standalone/latest/user-guide/st-ana-009"
+      },
+      {
+        "ErrorCode": "ST-USG-020",
+        "Description": "Log Message not used in workflow Main.",
+        "RuleName": "Minimum Log Messages",
+        "FilePath": "C:\\Users\\bazyl\\Documents\\UiPath\\ExpenseClaimConverter\\Main.xaml",
+        "ErrorSeverity": "Warning",
+        "Recommendation": "Using Log Message activities is important both during development and after release. They help understanding the flow path which is very useful for maintenance and, when an error occurs, to easily identify the source and the cause. [Learn more.](https://docs.uipath.com//studio/standalone/latest/user-guide/st-usg-020)",
+        "DocumentationLink": "https://docs.uipath.com//studio/standalone/latest/user-guide/st-usg-020"
+      }
+    ],
+    "MetadataMessages": []
+  }
+}
