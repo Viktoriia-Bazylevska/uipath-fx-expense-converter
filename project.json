@@ -4,6 +4,7 @@
   "description": "ExpenseClaimConverter, Frankfurter API",
   "main": "ConvertExpenseClaim.cs",
   "dependencies": {
+    "UiPath.CodedWorkflows": "[24.10.3]",
     "UiPath.Excel.Activities": "[3.6.1]",
     "UiPath.Mail.Activities": "[2.12.10]",
     "UiPath.System.Activities": "[26.10.0]",
@@ -48,8 +49,7 @@
         "editingStatus": "InProgress",
         "testCaseId": "4b0f9b0d-1a13-4d4b-9f4f-87eb6d25b024",
         "testCaseType": "TestCase",
-        "fileName": "ConvertExpenseClaimTests.cs",
-        "publishAsTestCase": true
+        "fileName": "ConvertExpenseClaimTests.cs"
       }
     ],
     "saveToCloud": false
@@ -63,17 +63,20 @@
         {
           "name": "in_InputPath",
           "type": "System.String",
-          "required": false
+          "required": false,
+          "hasDefault": false
         },
         {
           "name": "in_OutputPath",
           "type": "System.String",
-          "required": false
+          "required": false,
+          "hasDefault": false
         },
         {
           "name": "in_TargetCurrency",
           "type": "System.String",
-          "required": false
+          "required": false,
+          "hasDefault": false
         }
       ],
       "output": []

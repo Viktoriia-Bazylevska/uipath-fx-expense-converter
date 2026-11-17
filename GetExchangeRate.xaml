@@ -1,4 +1,15 @@
-<Activity mc:Ignorable="sap sap2010" x:Class="GetExchangeRate" sap2010:ExpressionActivityEditor.ExpressionActivityEditor="C#" sap2010:WorkflowViewState.IdRef="ActivityBuilder_1" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:s="clr-namespace:System;assembly=System.Private.CoreLib" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:nhr="clr-namespace:UiPath.Web.Activities.Http;assembly=UiPath.Web.Activities" xmlns:nhrm="clr-namespace:UiPath.Web.Activities.Http.Models;assembly=UiPath.Web.Activities" xmlns:web="clr-namespace:UiPath.Web.Activities;assembly=UiPath.Web.Activities" xmlns:jn="clr-namespace:Newtonsoft.Json.Linq;assembly=Newtonsoft.Json" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<Activity mc:Ignorable="sap sap2010" x:Class="GetExchangeRate" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:njl="clr-namespace:Newtonsoft.Json.Linq;assembly=Newtonsoft.Json" xmlns:s="clr-namespace:System;assembly=System.Private.CoreLib" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:uwah="clr-namespace:UiPath.Web.Activities.Http;assembly=UiPath.Web.Activities" xmlns:uwahm="clr-namespace:UiPath.Web.Activities.Http.Models;assembly=UiPath.Web.Activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="in_BaseCurrency" Type="InArgument(x:String)" />
+    <x:Property Name="in_QuoteCurrency" Type="InArgument(x:String)" />
+    <x:Property Name="in_RateDate" Type="InArgument(s:DateTime)" />
+    <x:Property Name="out_Success" Type="OutArgument(x:Boolean)" />
+    <x:Property Name="out_Rate" Type="OutArgument(x:Decimal)" />
+    <x:Property Name="out_RateDate" Type="OutArgument(s:DateTime)" />
+    <x:Property Name="out_ErrorMessage" Type="OutArgument(x:String)" />
+  </x:Members>
+  <sap2010:ExpressionActivityEditor.ExpressionActivityEditor>C#</sap2010:ExpressionActivityEditor.ExpressionActivityEditor>
+  <sap2010:WorkflowViewState.IdRef>ActivityBuilder_1</sap2010:WorkflowViewState.IdRef>
   <TextExpression.NamespacesForImplementation>
     <sco:Collection x:TypeArguments="x:String">
       <x:String>System</x:String>
@@ -25,78 +36,102 @@
   </TextExpression.NamespacesForImplementation>
   <TextExpression.ReferencesForImplementation>
     <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>GlobalVariablesT1PNoYwrqg</AssemblyReference>
+      <AssemblyReference>Newtonsoft.Json</AssemblyReference>
       <AssemblyReference>System</AssemblyReference>
-      <AssemblyReference>System.Core</AssemblyReference>
       <AssemblyReference>System.Activities</AssemblyReference>
       <AssemblyReference>System.Collections</AssemblyReference>
-      <AssemblyReference>System.Collections.Generic</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.TypeConverter</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
       <AssemblyReference>System.Data.Common</AssemblyReference>
-      <AssemblyReference>System.Private.CoreLib</AssemblyReference>
+      <AssemblyReference>System.Linq</AssemblyReference>
+      <AssemblyReference>System.Net.Primitives</AssemblyReference>
       <AssemblyReference>System.ObjectModel</AssemblyReference>
+      <AssemblyReference>System.Private.CoreLib</AssemblyReference>
+      <AssemblyReference>System.Private.Uri</AssemblyReference>
+      <AssemblyReference>System.Runtime.InteropServices</AssemblyReference>
+      <AssemblyReference>System.Text.RegularExpressions</AssemblyReference>
       <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>UiPath.Platform</AssemblyReference>
       <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
       <AssemblyReference>UiPath.Web.Activities</AssemblyReference>
-      <AssemblyReference>Newtonsoft.Json</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <x:Members>
-    <x:Property Name="in_BaseCurrency" Type="InArgument(x:String)" />
-    <x:Property Name="in_QuoteCurrency" Type="InArgument(x:String)" />
-    <x:Property Name="in_RateDate" Type="InArgument(s:DateTime)" />
-    <x:Property Name="out_Success" Type="OutArgument(x:Boolean)" />
-    <x:Property Name="out_Rate" Type="OutArgument(x:Decimal)" />
-    <x:Property Name="out_RateDate" Type="OutArgument(s:DateTime)" />
-    <x:Property Name="out_ErrorMessage" Type="OutArgument(x:String)" />
-  </x:Members>
   <Sequence DisplayName="Get exchange rate" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <Sequence.Variables>
       <Variable x:TypeArguments="x:String" Name="apiBaseUrl" />
       <Variable x:TypeArguments="x:String" Name="baseCurrency" />
       <Variable x:TypeArguments="x:String" Name="quoteCurrency" />
       <Variable x:TypeArguments="x:String" Name="requestUrl" />
-      <Variable x:TypeArguments="nhrm:HttpResponseSummary" Name="httpResponse" />
-      <Variable x:TypeArguments="jn:JArray" Name="rateResponseArray" />
-      <Variable x:TypeArguments="jn:JToken" Name="rateResponseItem" />
+      <Variable x:TypeArguments="uwahm:HttpResponseSummary" Name="httpResponse" />
+      <Variable x:TypeArguments="njl:JArray" Name="rateResponseArray" />
+      <Variable x:TypeArguments="njl:JToken" Name="rateResponseItem" />
       <Variable x:TypeArguments="s:Exception" Name="requestException" />
     </Sequence.Variables>
+    <sap:WorkflowViewStateService.ViewState>
+      <scg:Dictionary x:TypeArguments="x:String, x:Object">
+        <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+      </scg:Dictionary>
+    </sap:WorkflowViewStateService.ViewState>
     <Assign DisplayName="Initialize success output" sap2010:WorkflowViewState.IdRef="Assign_1">
       <Assign.To>
-        <OutArgument x:TypeArguments="x:Boolean"><CSharpReference x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpReference_1">out_Success</CSharpReference></OutArgument>
+        <OutArgument x:TypeArguments="x:Boolean">
+          <CSharpReference x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpReference_1">out_Success</CSharpReference>
+        </OutArgument>
       </Assign.To>
       <Assign.Value>
-        <InArgument x:TypeArguments="x:Boolean"><CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue_1">false</CSharpValue></InArgument>
+        <InArgument x:TypeArguments="x:Boolean">
+          <CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue_1">false</CSharpValue>
+        </InArgument>
       </Assign.Value>
     </Assign>
     <Assign DisplayName="Initialize rate output" sap2010:WorkflowViewState.IdRef="Assign_2">
       <Assign.To>
-        <OutArgument x:TypeArguments="x:Decimal"><CSharpReference x:TypeArguments="x:Decimal" sap2010:WorkflowViewState.IdRef="CSharpReference_2">out_Rate</CSharpReference></OutArgument>
+        <OutArgument x:TypeArguments="x:Decimal">
+          <CSharpReference x:TypeArguments="x:Decimal" sap2010:WorkflowViewState.IdRef="CSharpReference_2">out_Rate</CSharpReference>
+        </OutArgument>
       </Assign.To>
       <Assign.Value>
-        <InArgument x:TypeArguments="x:Decimal"><CSharpValue x:TypeArguments="x:Decimal" sap2010:WorkflowViewState.IdRef="CSharpValue_2">0m</CSharpValue></InArgument>
+        <InArgument x:TypeArguments="x:Decimal">
+          <CSharpValue x:TypeArguments="x:Decimal" sap2010:WorkflowViewState.IdRef="CSharpValue_2">0m</CSharpValue>
+        </InArgument>
       </Assign.Value>
     </Assign>
     <Assign DisplayName="Initialize returned date" sap2010:WorkflowViewState.IdRef="Assign_3">
       <Assign.To>
-        <OutArgument x:TypeArguments="s:DateTime"><CSharpReference x:TypeArguments="s:DateTime" sap2010:WorkflowViewState.IdRef="CSharpReference_3">out_RateDate</CSharpReference></OutArgument>
+        <OutArgument x:TypeArguments="s:DateTime">
+          <CSharpReference x:TypeArguments="s:DateTime" sap2010:WorkflowViewState.IdRef="CSharpReference_3">out_RateDate</CSharpReference>
+        </OutArgument>
       </Assign.To>
       <Assign.Value>
-        <InArgument x:TypeArguments="s:DateTime"><CSharpValue x:TypeArguments="s:DateTime" sap2010:WorkflowViewState.IdRef="CSharpValue_3">in_RateDate</CSharpValue></InArgument>
+        <InArgument x:TypeArguments="s:DateTime">
+          <CSharpValue x:TypeArguments="s:DateTime" sap2010:WorkflowViewState.IdRef="CSharpValue_3">in_RateDate</CSharpValue>
+        </InArgument>
       </Assign.Value>
     </Assign>
     <Assign DisplayName="Clear error output" sap2010:WorkflowViewState.IdRef="Assign_4">
       <Assign.To>
-        <OutArgument x:TypeArguments="x:String"><CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference_4">out_ErrorMessage</CSharpReference></OutArgument>
+        <OutArgument x:TypeArguments="x:String">
+          <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference_4">out_ErrorMessage</CSharpReference>
+        </OutArgument>
       </Assign.To>
       <Assign.Value>
-        <InArgument x:TypeArguments="x:String"><CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue_4">string.Empty</CSharpValue></InArgument>
+        <InArgument x:TypeArguments="x:String">
+          <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue_4">string.Empty</CSharpValue>
+        </InArgument>
       </Assign.Value>
     </Assign>
     <Assign DisplayName="Set Frankfurter API base URL" sap2010:WorkflowViewState.IdRef="Assign_5">
       <Assign.To>
-        <OutArgument x:TypeArguments="x:String"><CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference_5">apiBaseUrl</CSharpReference></OutArgument>
+        <OutArgument x:TypeArguments="x:String">
+          <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference_5">apiBaseUrl</CSharpReference>
+        </OutArgument>
       </Assign.To>
       <Assign.Value>
-        <InArgument x:TypeArguments="x:String"><CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue_5">"https://api.frankfurter.dev/v2/rates"</CSharpValue></InArgument>
+        <InArgument x:TypeArguments="x:String">
+          <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue_5">"https://api.frankfurter.dev/v2/rates"</CSharpValue>
+        </InArgument>
       </Assign.Value>
     </Assign>
     <TryCatch DisplayName="Handle exchange-rate lookup" sap2010:WorkflowViewState.IdRef="TryCatch_1">
@@ -104,96 +139,165 @@
         <Sequence DisplayName="Execute exchange-rate lookup" sap2010:WorkflowViewState.IdRef="Sequence_2">
           <Assign DisplayName="Normalize base currency" sap2010:WorkflowViewState.IdRef="Assign_6">
             <Assign.To>
-              <OutArgument x:TypeArguments="x:String"><CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference_6">baseCurrency</CSharpReference></OutArgument>
+              <OutArgument x:TypeArguments="x:String">
+                <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference_6">baseCurrency</CSharpReference>
+              </OutArgument>
             </Assign.To>
             <Assign.Value>
-              <InArgument x:TypeArguments="x:String"><CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue_6">(in_BaseCurrency ?? string.Empty).Trim().ToUpperInvariant()</CSharpValue></InArgument>
+              <InArgument x:TypeArguments="x:String">
+                <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue_6">(in_BaseCurrency ?? string.Empty).Trim().ToUpperInvariant()</CSharpValue>
+              </InArgument>
             </Assign.Value>
           </Assign>
           <Assign DisplayName="Normalize quote currency" sap2010:WorkflowViewState.IdRef="Assign_7">
             <Assign.To>
-              <OutArgument x:TypeArguments="x:String"><CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference_7">quoteCurrency</CSharpReference></OutArgument>
+              <OutArgument x:TypeArguments="x:String">
+                <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference_7">quoteCurrency</CSharpReference>
+              </OutArgument>
             </Assign.To>
             <Assign.Value>
-              <InArgument x:TypeArguments="x:String"><CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue_7">(in_QuoteCurrency ?? string.Empty).Trim().ToUpperInvariant()</CSharpValue></InArgument>
+              <InArgument x:TypeArguments="x:String">
+                <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue_7">(in_QuoteCurrency ?? string.Empty).Trim().ToUpperInvariant()</CSharpValue>
+              </InArgument>
             </Assign.Value>
           </Assign>
-          <ui:LogMessage DisplayName="Log exchange-rate start" Level="Info" sap2010:WorkflowViewState.IdRef="LogMessage_1">
+          <ui:LogMessage DisplayName="Log exchange-rate start" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Info">
             <ui:LogMessage.Message>
-              <InArgument x:TypeArguments="x:Object"><CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue_10">"GetExchangeRate started: base=" + baseCurrency + "; quote=" + quoteCurrency + "; date=" + in_RateDate.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)</CSharpValue></InArgument>
+              <InArgument x:TypeArguments="x:Object">
+                <CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue_10">"GetExchangeRate started: base=" + baseCurrency + "; quote=" + quoteCurrency + "; date=" + in_RateDate.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)</CSharpValue>
+              </InArgument>
             </ui:LogMessage.Message>
           </ui:LogMessage>
           <If DisplayName="Validate request inputs" sap2010:WorkflowViewState.IdRef="If_1">
             <If.Condition>
-              <InArgument x:TypeArguments="x:Boolean"><CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue_8">string.IsNullOrWhiteSpace(baseCurrency) || !System.Text.RegularExpressions.Regex.IsMatch(baseCurrency, "^[A-Z]{3}$") || string.IsNullOrWhiteSpace(quoteCurrency) || !System.Text.RegularExpressions.Regex.IsMatch(quoteCurrency, "^[A-Z]{3}$") || in_RateDate.Date &gt; DateTime.Today</CSharpValue></InArgument>
+              <InArgument x:TypeArguments="x:Boolean">
+                <CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue_8">string.IsNullOrWhiteSpace(baseCurrency) || !System.Text.RegularExpressions.Regex.IsMatch(baseCurrency, "^[A-Z]{3}$") || string.IsNullOrWhiteSpace(quoteCurrency) || !System.Text.RegularExpressions.Regex.IsMatch(quoteCurrency, "^[A-Z]{3}$") || in_RateDate.Date &gt; DateTime.Today</CSharpValue>
+              </InArgument>
             </If.Condition>
             <If.Then>
               <Sequence DisplayName="Reject invalid request input" sap2010:WorkflowViewState.IdRef="Sequence_3">
                 <Throw DisplayName="Throw validation business rule" sap2010:WorkflowViewState.IdRef="Throw_1">
-                  <Throw.Exception>
-                    <InArgument x:TypeArguments="s:Exception"><CSharpValue x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="CSharpValue_9">new UiPath.Core.BusinessRuleException(string.IsNullOrWhiteSpace(baseCurrency) ? "Invalid input: in_BaseCurrency is required." : !System.Text.RegularExpressions.Regex.IsMatch(baseCurrency, "^[A-Z]{3}$") ? "Invalid input: in_BaseCurrency must be exactly 3 letters." : string.IsNullOrWhiteSpace(quoteCurrency) ? "Invalid input: in_QuoteCurrency is required." : !System.Text.RegularExpressions.Regex.IsMatch(quoteCurrency, "^[A-Z]{3}$") ? "Invalid input: in_QuoteCurrency must be exactly 3 letters." : in_RateDate.Date &gt; DateTime.Today ? "Invalid input: in_RateDate must not be in the future." : "Invalid input: request validation failed.")</CSharpValue></InArgument>
-                  </Throw.Exception>
+                  <InArgument x:TypeArguments="s:Exception">
+                    <CSharpValue x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="CSharpValue_9">new UiPath.Core.BusinessRuleException(string.IsNullOrWhiteSpace(baseCurrency) ? "Invalid input: in_BaseCurrency is required." : !System.Text.RegularExpressions.Regex.IsMatch(baseCurrency, "^[A-Z]{3}$") ? "Invalid input: in_BaseCurrency must be exactly 3 letters." : string.IsNullOrWhiteSpace(quoteCurrency) ? "Invalid input: in_QuoteCurrency is required." : !System.Text.RegularExpressions.Regex.IsMatch(quoteCurrency, "^[A-Z]{3}$") ? "Invalid input: in_QuoteCurrency must be exactly 3 letters." : in_RateDate.Date &gt; DateTime.Today ? "Invalid input: in_RateDate must not be in the future." : "Invalid input: request validation failed.")</CSharpValue>
+                  </InArgument>
                 </Throw>
               </Sequence>
             </If.Then>
           </If>
           <If DisplayName="Use identity exchange rate" sap2010:WorkflowViewState.IdRef="If_2">
             <If.Condition>
-              <InArgument x:TypeArguments="x:Boolean"><CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue_11">baseCurrency == quoteCurrency</CSharpValue></InArgument>
+              <InArgument x:TypeArguments="x:Boolean">
+                <CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue_11">baseCurrency == quoteCurrency</CSharpValue>
+              </InArgument>
             </If.Condition>
             <If.Then>
               <Sequence DisplayName="Set identity exchange rate" sap2010:WorkflowViewState.IdRef="Sequence_4">
                 <Assign DisplayName="Set identity success" sap2010:WorkflowViewState.IdRef="Assign_8">
-                  <Assign.To><OutArgument x:TypeArguments="x:Boolean"><CSharpReference x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpReference_8">out_Success</CSharpReference></OutArgument></Assign.To>
-                  <Assign.Value><InArgument x:TypeArguments="x:Boolean"><CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue_12">true</CSharpValue></InArgument></Assign.Value>
+                  <Assign.To>
+                    <OutArgument x:TypeArguments="x:Boolean">
+                      <CSharpReference x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpReference_8">out_Success</CSharpReference>
+                    </OutArgument>
+                  </Assign.To>
+                  <Assign.Value>
+                    <InArgument x:TypeArguments="x:Boolean">
+                      <CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue_12">true</CSharpValue>
+                    </InArgument>
+                  </Assign.Value>
                 </Assign>
                 <Assign DisplayName="Set identity rate" sap2010:WorkflowViewState.IdRef="Assign_9">
-                  <Assign.To><OutArgument x:TypeArguments="x:Decimal"><CSharpReference x:TypeArguments="x:Decimal" sap2010:WorkflowViewState.IdRef="CSharpReference_9">out_Rate</CSharpReference></OutArgument></Assign.To>
-                  <Assign.Value><InArgument x:TypeArguments="x:Decimal"><CSharpValue x:TypeArguments="x:Decimal" sap2010:WorkflowViewState.IdRef="CSharpValue_13">1m</CSharpValue></InArgument></Assign.Value>
+                  <Assign.To>
+                    <OutArgument x:TypeArguments="x:Decimal">
+                      <CSharpReference x:TypeArguments="x:Decimal" sap2010:WorkflowViewState.IdRef="CSharpReference_9">out_Rate</CSharpReference>
+                    </OutArgument>
+                  </Assign.To>
+                  <Assign.Value>
+                    <InArgument x:TypeArguments="x:Decimal">
+                      <CSharpValue x:TypeArguments="x:Decimal" sap2010:WorkflowViewState.IdRef="CSharpValue_13">1m</CSharpValue>
+                    </InArgument>
+                  </Assign.Value>
                 </Assign>
                 <Assign DisplayName="Set identity date" sap2010:WorkflowViewState.IdRef="Assign_10">
-                  <Assign.To><OutArgument x:TypeArguments="s:DateTime"><CSharpReference x:TypeArguments="s:DateTime" sap2010:WorkflowViewState.IdRef="CSharpReference_10">out_RateDate</CSharpReference></OutArgument></Assign.To>
-                  <Assign.Value><InArgument x:TypeArguments="s:DateTime"><CSharpValue x:TypeArguments="s:DateTime" sap2010:WorkflowViewState.IdRef="CSharpValue_14">in_RateDate</CSharpValue></InArgument></Assign.Value>
+                  <Assign.To>
+                    <OutArgument x:TypeArguments="s:DateTime">
+                      <CSharpReference x:TypeArguments="s:DateTime" sap2010:WorkflowViewState.IdRef="CSharpReference_10">out_RateDate</CSharpReference>
+                    </OutArgument>
+                  </Assign.To>
+                  <Assign.Value>
+                    <InArgument x:TypeArguments="s:DateTime">
+                      <CSharpValue x:TypeArguments="s:DateTime" sap2010:WorkflowViewState.IdRef="CSharpValue_14">in_RateDate</CSharpValue>
+                    </InArgument>
+                  </Assign.Value>
                 </Assign>
-                <ui:LogMessage DisplayName="Log identity rate received" Level="Info" sap2010:WorkflowViewState.IdRef="LogMessage_2">
-                  <ui:LogMessage.Message><InArgument x:TypeArguments="x:Object"><CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue_15">"Rate received: rate=" + out_Rate.ToString(System.Globalization.CultureInfo.InvariantCulture) + "; rateDate=" + out_RateDate.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)</CSharpValue></InArgument></ui:LogMessage.Message>
+                <ui:LogMessage DisplayName="Log identity rate received" sap2010:WorkflowViewState.IdRef="LogMessage_2" Level="Info">
+                  <ui:LogMessage.Message>
+                    <InArgument x:TypeArguments="x:Object">
+                      <CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue_15">"Rate received: rate=" + out_Rate.ToString(System.Globalization.CultureInfo.InvariantCulture) + "; rateDate=" + out_RateDate.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)</CSharpValue>
+                    </InArgument>
+                  </ui:LogMessage.Message>
                 </ui:LogMessage>
               </Sequence>
             </If.Then>
             <If.Else>
               <Sequence DisplayName="Call Frankfurter API" sap2010:WorkflowViewState.IdRef="Sequence_5">
                 <Assign DisplayName="Build Frankfurter request URL" sap2010:WorkflowViewState.IdRef="Assign_11">
-                  <Assign.To><OutArgument x:TypeArguments="x:String"><CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference_11">requestUrl</CSharpReference></OutArgument></Assign.To>
-                  <Assign.Value><InArgument x:TypeArguments="x:String"><CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue_16">apiBaseUrl + "?date=" + in_RateDate.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture) + "&amp;base=" + Uri.EscapeDataString(baseCurrency) + "&amp;quotes=" + Uri.EscapeDataString(quoteCurrency)</CSharpValue></InArgument></Assign.Value>
+                  <Assign.To>
+                    <OutArgument x:TypeArguments="x:String">
+                      <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference_11">requestUrl</CSharpReference>
+                    </OutArgument>
+                  </Assign.To>
+                  <Assign.Value>
+                    <InArgument x:TypeArguments="x:String">
+                      <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue_16">apiBaseUrl + "?date=" + in_RateDate.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture) + "&amp;base=" + Uri.EscapeDataString(baseCurrency) + "&amp;quotes=" + Uri.EscapeDataString(quoteCurrency)</CSharpValue>
+                    </InArgument>
+                  </Assign.Value>
                 </Assign>
                 <TryCatch DisplayName="Handle HTTP and JSON processing" sap2010:WorkflowViewState.IdRef="TryCatch_2">
                   <TryCatch.Try>
                     <Sequence DisplayName="Execute resilient rate request" sap2010:WorkflowViewState.IdRef="Sequence_12">
-                      <ui:RetryScope DisplayName="Retry transient rate request" NumberOfRetries="3" RetryInterval="00:00:02" ContinueOnError="False" sap2010:WorkflowViewState.IdRef="RetryScope_1">
+                      <ui:RetryScope LogRetriedExceptions="{x:Null}" RetriedExceptionsLogLevel="{x:Null}" ContinueOnError="False" DisplayName="Retry transient rate request" sap2010:WorkflowViewState.IdRef="RetryScope_1" NumberOfRetries="3" RetryInterval="00:00:02">
                         <ui:RetryScope.ActivityBody>
                           <ActivityAction>
                             <Sequence DisplayName="Send rate request" sap2010:WorkflowViewState.IdRef="Sequence_13">
                               <Assign DisplayName="Clear request exception" sap2010:WorkflowViewState.IdRef="Assign_20">
-                                <Assign.To><OutArgument x:TypeArguments="s:Exception"><CSharpReference x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="CSharpReference_22">requestException</CSharpReference></OutArgument></Assign.To>
-                                <Assign.Value><InArgument x:TypeArguments="s:Exception"><CSharpValue x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="CSharpValue_35">null</CSharpValue></InArgument></Assign.Value>
+                                <Assign.To>
+                                  <OutArgument x:TypeArguments="s:Exception">
+                                    <CSharpReference x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="CSharpReference_22">requestException</CSharpReference>
+                                  </OutArgument>
+                                </Assign.To>
+                                <Assign.Value>
+                                  <InArgument x:TypeArguments="s:Exception">
+                                    <CSharpValue x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="CSharpValue_35">null</CSharpValue>
+                                  </InArgument>
+                                </Assign.Value>
                               </Assign>
                               <TryCatch DisplayName="Handle HTTP transport" sap2010:WorkflowViewState.IdRef="TryCatch_3">
                                 <TryCatch.Try>
                                   <Sequence DisplayName="Send HTTP request" sap2010:WorkflowViewState.IdRef="Sequence_19">
-                                    <nhr:NetHttpRequest DisplayName="GET Frankfurter exchange rate" Method="GET" RequestBodyType="None" AuthenticationType="None" RetryPolicyType="None" ContinueOnError="False" TimeoutInMiliseconds="10000" sap2010:WorkflowViewState.IdRef="NetHttpRequest_1">
-                                      <nhr:NetHttpRequest.RequestUrl>
-                                        <InArgument x:TypeArguments="x:String"><CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue_17">requestUrl</CSharpValue></InArgument>
-                                      </nhr:NetHttpRequest.RequestUrl>
-                                      <nhr:NetHttpRequest.Result>
-                                        <OutArgument x:TypeArguments="nhrm:HttpResponseSummary"><CSharpReference x:TypeArguments="nhrm:HttpResponseSummary" sap2010:WorkflowViewState.IdRef="CSharpReference_12">httpResponse</CSharpReference></OutArgument>
-                                      </nhr:NetHttpRequest.Result>
-                                    </nhr:NetHttpRequest>
+                                    <uwah:NetHttpRequest BasicAuthPassword="{x:Null}" BasicAuthSecurePassword="{x:Null}" BasicAuthUsername="{x:Null}" BinaryPayload="{x:Null}" ClientCertPassword="{x:Null}" ClientCertPath="{x:Null}" ClientCertSecurePassword="{x:Null}" Cookies="{x:Null}" CustomNegotiatedAuthCredentials="{x:Null}" FilePath="{x:Null}" FormData="{x:Null}" FormDataParts="{x:Null}" Headers="{x:Null}" LocalFiles="{x:Null}" OAuthToken="{x:Null}" OutputFileName="{x:Null}" OutputFileTargetFolder="{x:Null}" Parameters="{x:Null}" PathResource="{x:Null}" ProxyConfiguration="{x:Null}" ResourceFiles="{x:Null}" RetryStatusCodes="{x:Null}" TextPayload="{x:Null}" AuthenticationType="None" ContinueOnError="False" DisableSslVerification="False" DisplayName="GET Frankfurter exchange rate" EnableCookies="True" FileOverwrite="AutoRename" FollowRedirects="True" sap2010:WorkflowViewState.IdRef="NetHttpRequest_1" InitialDelay="500" MaxRedirects="3" MaxRetryAfterDelay="30000" Method="GET" Multiplier="2" PreferRetryAfterValue="True" RequestBodyType="None" RetryCount="3" RetryPolicyType="None" SaveRawRequestResponse="False" SaveResponseAsFile="False" TextPayloadContentType="application/json" TextPayloadEncoding="UTF-8" TlsProtocol="Automatic" UseJitter="True" UseOsNegotiatedAuthCredentials="True">
+                                      <uwah:NetHttpRequest.RequestUrl>
+                                        <InArgument x:TypeArguments="x:String">
+                                          <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue_17">requestUrl</CSharpValue>
+                                        </InArgument>
+                                      </uwah:NetHttpRequest.RequestUrl>
+                                      <uwah:NetHttpRequest.Result>
+                                        <OutArgument x:TypeArguments="uwahm:HttpResponseSummary">
+                                          <CSharpReference x:TypeArguments="uwahm:HttpResponseSummary" sap2010:WorkflowViewState.IdRef="CSharpReference_12">httpResponse</CSharpReference>
+                                        </OutArgument>
+                                      </uwah:NetHttpRequest.Result>
+                                      <uwah:NetHttpRequest.TimeoutInMiliseconds>
+                                        <InArgument x:TypeArguments="s:Nullable(x:Int32)">
+                                          <Literal x:TypeArguments="s:Nullable(x:Int32)" Value="10000" />
+                                        </InArgument>
+                                      </uwah:NetHttpRequest.TimeoutInMiliseconds>
+                                    </uwah:NetHttpRequest>
                                   </Sequence>
                                 </TryCatch.Try>
                                 <TryCatch.Catches>
                                   <Catch x:TypeArguments="s:OperationCanceledException" sap2010:WorkflowViewState.IdRef="Catch`1_3">
                                     <ActivityAction x:TypeArguments="s:OperationCanceledException">
-                                      <ActivityAction.Argument><DelegateInArgument x:TypeArguments="s:OperationCanceledException" Name="timeoutException" /></ActivityAction.Argument>
+                                      <ActivityAction.Argument>
+                                        <DelegateInArgument x:TypeArguments="s:OperationCanceledException" Name="timeoutException" />
+                                      </ActivityAction.Argument>
                                       <Sequence DisplayName="Retry timeout" sap2010:WorkflowViewState.IdRef="Sequence_20">
                                         <Rethrow DisplayName="Rethrow timeout for retry" sap2010:WorkflowViewState.IdRef="Rethrow_1" />
                                       </Sequence>
@@ -201,11 +305,21 @@
                                   </Catch>
                                   <Catch x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="Catch`1_4">
                                     <ActivityAction x:TypeArguments="s:Exception">
-                                      <ActivityAction.Argument><DelegateInArgument x:TypeArguments="s:Exception" Name="transportException" /></ActivityAction.Argument>
+                                      <ActivityAction.Argument>
+                                        <DelegateInArgument x:TypeArguments="s:Exception" Name="transportException" />
+                                      </ActivityAction.Argument>
                                       <Sequence DisplayName="Store HTTP transport exception" sap2010:WorkflowViewState.IdRef="Sequence_21">
                                         <Assign DisplayName="Store request exception" sap2010:WorkflowViewState.IdRef="Assign_21">
-                                          <Assign.To><OutArgument x:TypeArguments="s:Exception"><CSharpReference x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="CSharpReference_23">requestException</CSharpReference></OutArgument></Assign.To>
-                                          <Assign.Value><InArgument x:TypeArguments="s:Exception"><CSharpValue x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="CSharpValue_36">transportException</CSharpValue></InArgument></Assign.Value>
+                                          <Assign.To>
+                                            <OutArgument x:TypeArguments="s:Exception">
+                                              <CSharpReference x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="CSharpReference_23">requestException</CSharpReference>
+                                            </OutArgument>
+                                          </Assign.To>
+                                          <Assign.Value>
+                                            <InArgument x:TypeArguments="s:Exception">
+                                              <CSharpValue x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="CSharpValue_36">transportException</CSharpValue>
+                                            </InArgument>
+                                          </Assign.Value>
                                         </Assign>
                                       </Sequence>
                                     </ActivityAction>
@@ -214,12 +328,16 @@
                               </TryCatch>
                               <If DisplayName="Retry on 5xx response" sap2010:WorkflowViewState.IdRef="If_5">
                                 <If.Condition>
-                                  <InArgument x:TypeArguments="x:Boolean"><CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue_37">httpResponse != null &amp;&amp; (int)httpResponse.StatusCode &gt;= 500 &amp;&amp; (int)httpResponse.StatusCode &lt; 600</CSharpValue></InArgument>
+                                  <InArgument x:TypeArguments="x:Boolean">
+                                    <CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue_37">httpResponse != null &amp;&amp; (int)httpResponse.StatusCode &gt;= 500 &amp;&amp; (int)httpResponse.StatusCode &lt; 600</CSharpValue>
+                                  </InArgument>
                                 </If.Condition>
                                 <If.Then>
                                   <Sequence DisplayName="Raise server error for retry" sap2010:WorkflowViewState.IdRef="Sequence_14">
                                     <Throw DisplayName="Throw server error for retry" sap2010:WorkflowViewState.IdRef="Throw_2">
-                                      <Throw.Exception><InArgument x:TypeArguments="s:Exception"><CSharpValue x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="CSharpValue_38">new System.Exception("Rate service returned a server error.")</CSharpValue></InArgument></Throw.Exception>
+                                      <InArgument x:TypeArguments="s:Exception">
+                                        <CSharpValue x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="CSharpValue_38">new System.Exception("Rate service returned a server error.")</CSharpValue>
+                                      </InArgument>
                                     </Throw>
                                   </Sequence>
                                 </If.Then>
@@ -227,72 +345,143 @@
                             </Sequence>
                           </ActivityAction>
                         </ui:RetryScope.ActivityBody>
+                        <ui:RetryScope.Condition>
+                          <ActivityFunc x:TypeArguments="x:Boolean" />
+                        </ui:RetryScope.Condition>
                       </ui:RetryScope>
                       <If DisplayName="Handle non-timeout request exception" sap2010:WorkflowViewState.IdRef="If_6">
                         <If.Condition>
-                          <InArgument x:TypeArguments="x:Boolean"><CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue_39">requestException != null</CSharpValue></InArgument>
+                          <InArgument x:TypeArguments="x:Boolean">
+                            <CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue_39">requestException != null</CSharpValue>
+                          </InArgument>
                         </If.Condition>
                         <If.Then>
                           <Sequence DisplayName="Raise service exception" sap2010:WorkflowViewState.IdRef="Sequence_22">
                             <Throw DisplayName="Throw service unavailable" sap2010:WorkflowViewState.IdRef="Throw_3">
-                              <Throw.Exception><InArgument x:TypeArguments="s:Exception"><CSharpValue x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="CSharpValue_40">new System.Exception("Rate service unavailable, try again later.")</CSharpValue></InArgument></Throw.Exception>
+                              <InArgument x:TypeArguments="s:Exception">
+                                <CSharpValue x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="CSharpValue_40">new System.Exception("Rate service unavailable, try again later.")</CSharpValue>
+                              </InArgument>
                             </Throw>
                           </Sequence>
                         </If.Then>
                       </If>
                       <If DisplayName="Check Frankfurter HTTP status" sap2010:WorkflowViewState.IdRef="If_3">
                         <If.Condition>
-                          <InArgument x:TypeArguments="x:Boolean"><CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue_18">httpResponse != null &amp;&amp; (int)httpResponse.StatusCode &gt;= 200 &amp;&amp; (int)httpResponse.StatusCode &lt; 300</CSharpValue></InArgument>
+                          <InArgument x:TypeArguments="x:Boolean">
+                            <CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue_18">httpResponse != null &amp;&amp; (int)httpResponse.StatusCode &gt;= 200 &amp;&amp; (int)httpResponse.StatusCode &lt; 300</CSharpValue>
+                          </InArgument>
                         </If.Condition>
                         <If.Then>
                           <Sequence DisplayName="Parse successful response" sap2010:WorkflowViewState.IdRef="Sequence_6">
-                            <web:DeserializeJsonArray DisplayName="Parse Frankfurter response" sap2010:WorkflowViewState.IdRef="DeserializeJsonArray_1">
-                              <web:DeserializeJsonArray.JsonString>
-                                <InArgument x:TypeArguments="x:String"><CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue_19">httpResponse.TextContent</CSharpValue></InArgument>
-                              </web:DeserializeJsonArray.JsonString>
-                              <web:DeserializeJsonArray.JsonArray>
-                                <OutArgument x:TypeArguments="jn:JArray"><CSharpReference x:TypeArguments="jn:JArray" sap2010:WorkflowViewState.IdRef="CSharpReference_13">rateResponseArray</CSharpReference></OutArgument>
-                              </web:DeserializeJsonArray.JsonArray>
-                            </web:DeserializeJsonArray>
+                            <ui:DeserializeJsonArray DisplayName="Parse Frankfurter response" sap2010:WorkflowViewState.IdRef="DeserializeJsonArray_1">
+                              <ui:DeserializeJsonArray.JsonArray>
+                                <OutArgument x:TypeArguments="njl:JArray">
+                                  <CSharpReference x:TypeArguments="njl:JArray" sap2010:WorkflowViewState.IdRef="CSharpReference_13">rateResponseArray</CSharpReference>
+                                </OutArgument>
+                              </ui:DeserializeJsonArray.JsonArray>
+                              <ui:DeserializeJsonArray.JsonString>
+                                <InArgument x:TypeArguments="x:String">
+                                  <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue_19">httpResponse.TextContent</CSharpValue>
+                                </InArgument>
+                              </ui:DeserializeJsonArray.JsonString>
+                            </ui:DeserializeJsonArray>
                             <Assign DisplayName="Select quote rate item" sap2010:WorkflowViewState.IdRef="Assign_22">
-                              <Assign.To><OutArgument x:TypeArguments="jn:JToken"><CSharpReference x:TypeArguments="jn:JToken" sap2010:WorkflowViewState.IdRef="CSharpReference_24">rateResponseItem</CSharpReference></OutArgument></Assign.To>
-                              <Assign.Value><InArgument x:TypeArguments="jn:JToken"><CSharpValue x:TypeArguments="jn:JToken" sap2010:WorkflowViewState.IdRef="CSharpValue_41">rateResponseArray != null ? rateResponseArray.SelectToken("$[?(@.quote == '" + quoteCurrency + "')]") : null</CSharpValue></InArgument></Assign.Value>
+                              <Assign.To>
+                                <OutArgument x:TypeArguments="njl:JToken">
+                                  <CSharpReference x:TypeArguments="njl:JToken" sap2010:WorkflowViewState.IdRef="CSharpReference_24">rateResponseItem</CSharpReference>
+                                </OutArgument>
+                              </Assign.To>
+                              <Assign.Value>
+                                <InArgument x:TypeArguments="njl:JToken">
+                                  <CSharpValue x:TypeArguments="njl:JToken" sap2010:WorkflowViewState.IdRef="CSharpValue_41">rateResponseArray != null ? rateResponseArray.SelectToken("$[?(@.quote == '" + quoteCurrency + "')]") : null</CSharpValue>
+                                </InArgument>
+                              </Assign.Value>
                             </Assign>
                             <If DisplayName="Check rate response item" sap2010:WorkflowViewState.IdRef="If_4">
                               <If.Condition>
-                                <InArgument x:TypeArguments="x:Boolean"><CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue_20">rateResponseItem != null &amp;&amp; rateResponseItem["quote"] != null &amp;&amp; rateResponseItem["rate"] != null &amp;&amp; string.Equals(rateResponseItem["quote"].ToObject&lt;string&gt;(), quoteCurrency, System.StringComparison.OrdinalIgnoreCase)</CSharpValue></InArgument>
+                                <InArgument x:TypeArguments="x:Boolean">
+                                  <CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue_20">rateResponseItem != null &amp;&amp; rateResponseItem["quote"] != null &amp;&amp; rateResponseItem["rate"] != null &amp;&amp; string.Equals(rateResponseItem["quote"].ToObject&lt;string&gt;(), quoteCurrency, System.StringComparison.OrdinalIgnoreCase)</CSharpValue>
+                                </InArgument>
                               </If.Condition>
                               <If.Then>
                                 <Sequence DisplayName="Set parsed exchange rate" sap2010:WorkflowViewState.IdRef="Sequence_7">
                                   <Assign DisplayName="Set parsed exchange rate" sap2010:WorkflowViewState.IdRef="Assign_12">
-                                    <Assign.To><OutArgument x:TypeArguments="x:Decimal"><CSharpReference x:TypeArguments="x:Decimal" sap2010:WorkflowViewState.IdRef="CSharpReference_14">out_Rate</CSharpReference></OutArgument></Assign.To>
-                                    <Assign.Value><InArgument x:TypeArguments="x:Decimal"><CSharpValue x:TypeArguments="x:Decimal" sap2010:WorkflowViewState.IdRef="CSharpValue_21">rateResponseItem["rate"].ToObject&lt;decimal&gt;()</CSharpValue></InArgument></Assign.Value>
+                                    <Assign.To>
+                                      <OutArgument x:TypeArguments="x:Decimal">
+                                        <CSharpReference x:TypeArguments="x:Decimal" sap2010:WorkflowViewState.IdRef="CSharpReference_14">out_Rate</CSharpReference>
+                                      </OutArgument>
+                                    </Assign.To>
+                                    <Assign.Value>
+                                      <InArgument x:TypeArguments="x:Decimal">
+                                        <CSharpValue x:TypeArguments="x:Decimal" sap2010:WorkflowViewState.IdRef="CSharpValue_21">rateResponseItem["rate"].ToObject&lt;decimal&gt;()</CSharpValue>
+                                      </InArgument>
+                                    </Assign.Value>
                                   </Assign>
                                   <Assign DisplayName="Set API returned date" sap2010:WorkflowViewState.IdRef="Assign_13">
-                                    <Assign.To><OutArgument x:TypeArguments="s:DateTime"><CSharpReference x:TypeArguments="s:DateTime" sap2010:WorkflowViewState.IdRef="CSharpReference_15">out_RateDate</CSharpReference></OutArgument></Assign.To>
-                                    <Assign.Value><InArgument x:TypeArguments="s:DateTime"><CSharpValue x:TypeArguments="s:DateTime" sap2010:WorkflowViewState.IdRef="CSharpValue_22">DateTime.ParseExact(rateResponseItem["date"].ToObject&lt;string&gt;(), "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None)</CSharpValue></InArgument></Assign.Value>
+                                    <Assign.To>
+                                      <OutArgument x:TypeArguments="s:DateTime">
+                                        <CSharpReference x:TypeArguments="s:DateTime" sap2010:WorkflowViewState.IdRef="CSharpReference_15">out_RateDate</CSharpReference>
+                                      </OutArgument>
+                                    </Assign.To>
+                                    <Assign.Value>
+                                      <InArgument x:TypeArguments="s:DateTime">
+                                        <CSharpValue x:TypeArguments="s:DateTime" sap2010:WorkflowViewState.IdRef="CSharpValue_22">DateTime.ParseExact(rateResponseItem["date"].ToObject&lt;string&gt;(), "yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None)</CSharpValue>
+                                      </InArgument>
+                                    </Assign.Value>
                                   </Assign>
                                   <Assign DisplayName="Set API success" sap2010:WorkflowViewState.IdRef="Assign_14">
-                                    <Assign.To><OutArgument x:TypeArguments="x:Boolean"><CSharpReference x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpReference_16">out_Success</CSharpReference></OutArgument></Assign.To>
-                                    <Assign.Value><InArgument x:TypeArguments="x:Boolean"><CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue_23">true</CSharpValue></InArgument></Assign.Value>
+                                    <Assign.To>
+                                      <OutArgument x:TypeArguments="x:Boolean">
+                                        <CSharpReference x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpReference_16">out_Success</CSharpReference>
+                                      </OutArgument>
+                                    </Assign.To>
+                                    <Assign.Value>
+                                      <InArgument x:TypeArguments="x:Boolean">
+                                        <CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue_23">true</CSharpValue>
+                                      </InArgument>
+                                    </Assign.Value>
                                   </Assign>
-                                  <ui:LogMessage DisplayName="Log rate received" Level="Info" sap2010:WorkflowViewState.IdRef="LogMessage_3">
-                                    <ui:LogMessage.Message><InArgument x:TypeArguments="x:Object"><CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue_24">"Rate received: rate=" + out_Rate.ToString(System.Globalization.CultureInfo.InvariantCulture) + "; rateDate=" + out_RateDate.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)</CSharpValue></InArgument></ui:LogMessage.Message>
+                                  <ui:LogMessage DisplayName="Log rate received" sap2010:WorkflowViewState.IdRef="LogMessage_3" Level="Info">
+                                    <ui:LogMessage.Message>
+                                      <InArgument x:TypeArguments="x:Object">
+                                        <CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue_24">"Rate received: rate=" + out_Rate.ToString(System.Globalization.CultureInfo.InvariantCulture) + "; rateDate=" + out_RateDate.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)</CSharpValue>
+                                      </InArgument>
+                                    </ui:LogMessage.Message>
                                   </ui:LogMessage>
                                 </Sequence>
                               </If.Then>
                               <If.Else>
                                 <Sequence DisplayName="Handle missing quote rate" sap2010:WorkflowViewState.IdRef="Sequence_8">
                                   <Assign DisplayName="Set no-rate failure" sap2010:WorkflowViewState.IdRef="Assign_23">
-                                    <Assign.To><OutArgument x:TypeArguments="x:Boolean"><CSharpReference x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpReference_25">out_Success</CSharpReference></OutArgument></Assign.To>
-                                    <Assign.Value><InArgument x:TypeArguments="x:Boolean"><CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue_42">false</CSharpValue></InArgument></Assign.Value>
+                                    <Assign.To>
+                                      <OutArgument x:TypeArguments="x:Boolean">
+                                        <CSharpReference x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpReference_25">out_Success</CSharpReference>
+                                      </OutArgument>
+                                    </Assign.To>
+                                    <Assign.Value>
+                                      <InArgument x:TypeArguments="x:Boolean">
+                                        <CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue_42">false</CSharpValue>
+                                      </InArgument>
+                                    </Assign.Value>
                                   </Assign>
                                   <Assign DisplayName="Set no-rate error" sap2010:WorkflowViewState.IdRef="Assign_15">
-                                    <Assign.To><OutArgument x:TypeArguments="x:String"><CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference_17">out_ErrorMessage</CSharpReference></OutArgument></Assign.To>
-                                    <Assign.Value><InArgument x:TypeArguments="x:String"><CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue_25">"No rate returned for " + quoteCurrency</CSharpValue></InArgument></Assign.Value>
+                                    <Assign.To>
+                                      <OutArgument x:TypeArguments="x:String">
+                                        <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference_17">out_ErrorMessage</CSharpReference>
+                                      </OutArgument>
+                                    </Assign.To>
+                                    <Assign.Value>
+                                      <InArgument x:TypeArguments="x:String">
+                                        <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue_25">"No rate returned for " + quoteCurrency</CSharpValue>
+                                      </InArgument>
+                                    </Assign.Value>
                                   </Assign>
-                                  <ui:LogMessage DisplayName="Log missing quote rate" Level="Warn" sap2010:WorkflowViewState.IdRef="LogMessage_4">
-                                    <ui:LogMessage.Message><InArgument x:TypeArguments="x:Object"><CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue_26">"No rate returned for " + quoteCurrency</CSharpValue></InArgument></ui:LogMessage.Message>
+                                  <ui:LogMessage DisplayName="Log missing quote rate" sap2010:WorkflowViewState.IdRef="LogMessage_4" Level="Warn">
+                                    <ui:LogMessage.Message>
+                                      <InArgument x:TypeArguments="x:Object">
+                                        <CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue_26">"No rate returned for " + quoteCurrency</CSharpValue>
+                                      </InArgument>
+                                    </ui:LogMessage.Message>
                                   </ui:LogMessage>
                                 </Sequence>
                               </If.Else>
@@ -303,35 +492,77 @@
                           <Sequence DisplayName="Handle non-success response" sap2010:WorkflowViewState.IdRef="Sequence_15">
                             <If DisplayName="Check unsupported currency or date status" sap2010:WorkflowViewState.IdRef="If_7">
                               <If.Condition>
-                                <InArgument x:TypeArguments="x:Boolean"><CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue_43">httpResponse != null &amp;&amp; ((int)httpResponse.StatusCode == 404 || (int)httpResponse.StatusCode == 422)</CSharpValue></InArgument>
+                                <InArgument x:TypeArguments="x:Boolean">
+                                  <CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue_43">httpResponse != null &amp;&amp; ((int)httpResponse.StatusCode == 404 || (int)httpResponse.StatusCode == 422)</CSharpValue>
+                                </InArgument>
                               </If.Condition>
                               <If.Then>
                                 <Sequence DisplayName="Handle unsupported currency or date" sap2010:WorkflowViewState.IdRef="Sequence_16">
                                   <Assign DisplayName="Set unsupported response failure" sap2010:WorkflowViewState.IdRef="Assign_24">
-                                    <Assign.To><OutArgument x:TypeArguments="x:Boolean"><CSharpReference x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpReference_26">out_Success</CSharpReference></OutArgument></Assign.To>
-                                    <Assign.Value><InArgument x:TypeArguments="x:Boolean"><CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue_44">false</CSharpValue></InArgument></Assign.Value>
+                                    <Assign.To>
+                                      <OutArgument x:TypeArguments="x:Boolean">
+                                        <CSharpReference x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpReference_26">out_Success</CSharpReference>
+                                      </OutArgument>
+                                    </Assign.To>
+                                    <Assign.Value>
+                                      <InArgument x:TypeArguments="x:Boolean">
+                                        <CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue_44">false</CSharpValue>
+                                      </InArgument>
+                                    </Assign.Value>
                                   </Assign>
                                   <Assign DisplayName="Set unsupported response error" sap2010:WorkflowViewState.IdRef="Assign_16">
-                                    <Assign.To><OutArgument x:TypeArguments="x:String"><CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference_18">out_ErrorMessage</CSharpReference></OutArgument></Assign.To>
-                                    <Assign.Value><InArgument x:TypeArguments="x:String"><CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue_27">"Currency or date not supported"</CSharpValue></InArgument></Assign.Value>
+                                    <Assign.To>
+                                      <OutArgument x:TypeArguments="x:String">
+                                        <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference_18">out_ErrorMessage</CSharpReference>
+                                      </OutArgument>
+                                    </Assign.To>
+                                    <Assign.Value>
+                                      <InArgument x:TypeArguments="x:String">
+                                        <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue_27">"Currency or date not supported"</CSharpValue>
+                                      </InArgument>
+                                    </Assign.Value>
                                   </Assign>
-                                  <ui:LogMessage DisplayName="Log unsupported currency or date" Level="Warn" sap2010:WorkflowViewState.IdRef="LogMessage_5">
-                                    <ui:LogMessage.Message><InArgument x:TypeArguments="x:Object"><CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue_28">"Currency or date not supported"</CSharpValue></InArgument></ui:LogMessage.Message>
+                                  <ui:LogMessage DisplayName="Log unsupported currency or date" sap2010:WorkflowViewState.IdRef="LogMessage_5" Level="Warn">
+                                    <ui:LogMessage.Message>
+                                      <InArgument x:TypeArguments="x:Object">
+                                        <CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue_28">"Currency or date not supported"</CSharpValue>
+                                      </InArgument>
+                                    </ui:LogMessage.Message>
                                   </ui:LogMessage>
                                 </Sequence>
                               </If.Then>
                               <If.Else>
                                 <Sequence DisplayName="Handle unexpected HTTP status" sap2010:WorkflowViewState.IdRef="Sequence_17">
                                   <Assign DisplayName="Set unexpected status failure" sap2010:WorkflowViewState.IdRef="Assign_25">
-                                    <Assign.To><OutArgument x:TypeArguments="x:Boolean"><CSharpReference x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpReference_27">out_Success</CSharpReference></OutArgument></Assign.To>
-                                    <Assign.Value><InArgument x:TypeArguments="x:Boolean"><CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue_45">false</CSharpValue></InArgument></Assign.Value>
+                                    <Assign.To>
+                                      <OutArgument x:TypeArguments="x:Boolean">
+                                        <CSharpReference x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpReference_27">out_Success</CSharpReference>
+                                      </OutArgument>
+                                    </Assign.To>
+                                    <Assign.Value>
+                                      <InArgument x:TypeArguments="x:Boolean">
+                                        <CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue_45">false</CSharpValue>
+                                      </InArgument>
+                                    </Assign.Value>
                                   </Assign>
                                   <Assign DisplayName="Set unexpected status error" sap2010:WorkflowViewState.IdRef="Assign_26">
-                                    <Assign.To><OutArgument x:TypeArguments="x:String"><CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference_28">out_ErrorMessage</CSharpReference></OutArgument></Assign.To>
-                                    <Assign.Value><InArgument x:TypeArguments="x:String"><CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue_46">"Rate service unavailable, try again later"</CSharpValue></InArgument></Assign.Value>
+                                    <Assign.To>
+                                      <OutArgument x:TypeArguments="x:String">
+                                        <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference_28">out_ErrorMessage</CSharpReference>
+                                      </OutArgument>
+                                    </Assign.To>
+                                    <Assign.Value>
+                                      <InArgument x:TypeArguments="x:String">
+                                        <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue_46">"Rate service unavailable, try again later"</CSharpValue>
+                                      </InArgument>
+                                    </Assign.Value>
                                   </Assign>
-                                  <ui:LogMessage DisplayName="Log unexpected HTTP status" Level="Error" sap2010:WorkflowViewState.IdRef="LogMessage_9">
-                                    <ui:LogMessage.Message><InArgument x:TypeArguments="x:Object"><CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue_47">"Rate service unavailable, try again later"</CSharpValue></InArgument></ui:LogMessage.Message>
+                                  <ui:LogMessage DisplayName="Log unexpected HTTP status" sap2010:WorkflowViewState.IdRef="LogMessage_9" Level="Error">
+                                    <ui:LogMessage.Message>
+                                      <InArgument x:TypeArguments="x:Object">
+                                        <CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue_47">"Rate service unavailable, try again later"</CSharpValue>
+                                      </InArgument>
+                                    </ui:LogMessage.Message>
                                   </ui:LogMessage>
                                 </Sequence>
                               </If.Else>
@@ -344,18 +575,40 @@
                   <TryCatch.Catches>
                     <Catch x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="Catch`1_5">
                       <ActivityAction x:TypeArguments="s:Exception">
-                        <ActivityAction.Argument><DelegateInArgument x:TypeArguments="s:Exception" Name="rateException" /></ActivityAction.Argument>
+                        <ActivityAction.Argument>
+                          <DelegateInArgument x:TypeArguments="s:Exception" Name="rateException" />
+                        </ActivityAction.Argument>
                         <Sequence DisplayName="Handle rate service failure" sap2010:WorkflowViewState.IdRef="Sequence_18">
                           <Assign DisplayName="Set service failure" sap2010:WorkflowViewState.IdRef="Assign_27">
-                            <Assign.To><OutArgument x:TypeArguments="x:Boolean"><CSharpReference x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpReference_29">out_Success</CSharpReference></OutArgument></Assign.To>
-                            <Assign.Value><InArgument x:TypeArguments="x:Boolean"><CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue_48">false</CSharpValue></InArgument></Assign.Value>
+                            <Assign.To>
+                              <OutArgument x:TypeArguments="x:Boolean">
+                                <CSharpReference x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpReference_29">out_Success</CSharpReference>
+                              </OutArgument>
+                            </Assign.To>
+                            <Assign.Value>
+                              <InArgument x:TypeArguments="x:Boolean">
+                                <CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue_48">false</CSharpValue>
+                              </InArgument>
+                            </Assign.Value>
                           </Assign>
                           <Assign DisplayName="Set service unavailable error" sap2010:WorkflowViewState.IdRef="Assign_28">
-                            <Assign.To><OutArgument x:TypeArguments="x:String"><CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference_30">out_ErrorMessage</CSharpReference></OutArgument></Assign.To>
-                            <Assign.Value><InArgument x:TypeArguments="x:String"><CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue_49">"Rate service unavailable, try again later"</CSharpValue></InArgument></Assign.Value>
+                            <Assign.To>
+                              <OutArgument x:TypeArguments="x:String">
+                                <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference_30">out_ErrorMessage</CSharpReference>
+                              </OutArgument>
+                            </Assign.To>
+                            <Assign.Value>
+                              <InArgument x:TypeArguments="x:String">
+                                <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue_49">"Rate service unavailable, try again later"</CSharpValue>
+                              </InArgument>
+                            </Assign.Value>
                           </Assign>
-                          <ui:LogMessage DisplayName="Log rate service failure" Level="Error" sap2010:WorkflowViewState.IdRef="LogMessage_10">
-                            <ui:LogMessage.Message><InArgument x:TypeArguments="x:Object"><CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue_50">"Rate service error: status=" + (httpResponse != null ? ((int)httpResponse.StatusCode).ToString(System.Globalization.CultureInfo.InvariantCulture) : "0") + "; message=Rate service unavailable, try again later"</CSharpValue></InArgument></ui:LogMessage.Message>
+                          <ui:LogMessage DisplayName="Log rate service failure" sap2010:WorkflowViewState.IdRef="LogMessage_10" Level="Error">
+                            <ui:LogMessage.Message>
+                              <InArgument x:TypeArguments="x:Object">
+                                <CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue_50">"Rate service error: status=" + (httpResponse != null ? ((int)httpResponse.StatusCode).ToString(System.Globalization.CultureInfo.InvariantCulture) : "0") + "; message=Rate service unavailable, try again later"</CSharpValue>
+                              </InArgument>
+                            </ui:LogMessage.Message>
                           </ui:LogMessage>
                         </Sequence>
                       </ActivityAction>
@@ -364,12 +617,18 @@
                 </TryCatch>
                 <If DisplayName="Check returned rate date" sap2010:WorkflowViewState.IdRef="If_8">
                   <If.Condition>
-                    <InArgument x:TypeArguments="x:Boolean"><CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue_51">out_Success &amp;&amp; out_RateDate.Date != in_RateDate.Date</CSharpValue></InArgument>
+                    <InArgument x:TypeArguments="x:Boolean">
+                      <CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue_51">out_Success &amp;&amp; out_RateDate.Date != in_RateDate.Date</CSharpValue>
+                    </InArgument>
                   </If.Condition>
                   <If.Then>
                     <Sequence DisplayName="Log returned date difference" sap2010:WorkflowViewState.IdRef="Sequence_23">
-                      <ui:LogMessage DisplayName="Log returned date difference" Level="Warn" sap2010:WorkflowViewState.IdRef="LogMessage_11">
-                        <ui:LogMessage.Message><InArgument x:TypeArguments="x:Object"><CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue_52">"Returned rate date differs from requested date: requested=" + in_RateDate.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture) + "; returned=" + out_RateDate.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)</CSharpValue></InArgument></ui:LogMessage.Message>
+                      <ui:LogMessage DisplayName="Log returned date difference" sap2010:WorkflowViewState.IdRef="LogMessage_11" Level="Warn">
+                        <ui:LogMessage.Message>
+                          <InArgument x:TypeArguments="x:Object">
+                            <CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue_52">"Returned rate date differs from requested date: requested=" + in_RateDate.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture) + "; returned=" + out_RateDate.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)</CSharpValue>
+                          </InArgument>
+                        </ui:LogMessage.Message>
                       </ui:LogMessage>
                     </Sequence>
                   </If.Then>
@@ -382,45 +641,91 @@
       <TryCatch.Catches>
         <Catch x:TypeArguments="ui:BusinessRuleException" sap2010:WorkflowViewState.IdRef="Catch`1_1">
           <ActivityAction x:TypeArguments="ui:BusinessRuleException">
-            <ActivityAction.Argument><DelegateInArgument x:TypeArguments="ui:BusinessRuleException" Name="businessException" /></ActivityAction.Argument>
+            <ActivityAction.Argument>
+              <DelegateInArgument x:TypeArguments="ui:BusinessRuleException" Name="businessException" />
+            </ActivityAction.Argument>
             <Sequence DisplayName="Handle invalid request" sap2010:WorkflowViewState.IdRef="Sequence_10">
               <Assign DisplayName="Set validation failure" sap2010:WorkflowViewState.IdRef="Assign_19">
-                <Assign.To><OutArgument x:TypeArguments="x:Boolean"><CSharpReference x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpReference_21">out_Success</CSharpReference></OutArgument></Assign.To>
-                <Assign.Value><InArgument x:TypeArguments="x:Boolean"><CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue_34">false</CSharpValue></InArgument></Assign.Value>
+                <Assign.To>
+                  <OutArgument x:TypeArguments="x:Boolean">
+                    <CSharpReference x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpReference_21">out_Success</CSharpReference>
+                  </OutArgument>
+                </Assign.To>
+                <Assign.Value>
+                  <InArgument x:TypeArguments="x:Boolean">
+                    <CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue_34">false</CSharpValue>
+                  </InArgument>
+                </Assign.Value>
               </Assign>
               <Assign DisplayName="Return validation error" sap2010:WorkflowViewState.IdRef="Assign_17">
-                <Assign.To><OutArgument x:TypeArguments="x:String"><CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference_19">out_ErrorMessage</CSharpReference></OutArgument></Assign.To>
-                <Assign.Value><InArgument x:TypeArguments="x:String"><CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue_29">businessException.Message</CSharpValue></InArgument></Assign.Value>
+                <Assign.To>
+                  <OutArgument x:TypeArguments="x:String">
+                    <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference_19">out_ErrorMessage</CSharpReference>
+                  </OutArgument>
+                </Assign.To>
+                <Assign.Value>
+                  <InArgument x:TypeArguments="x:String">
+                    <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue_29">businessException.Message</CSharpValue>
+                  </InArgument>
+                </Assign.Value>
               </Assign>
-              <ui:LogMessage DisplayName="Log validation warning" Level="Warn" sap2010:WorkflowViewState.IdRef="LogMessage_6">
-                <ui:LogMessage.Message><InArgument x:TypeArguments="x:Object"><CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue_30">businessException.Message</CSharpValue></InArgument></ui:LogMessage.Message>
+              <ui:LogMessage DisplayName="Log validation warning" sap2010:WorkflowViewState.IdRef="LogMessage_6" Level="Warn">
+                <ui:LogMessage.Message>
+                  <InArgument x:TypeArguments="x:Object">
+                    <CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue_30">businessException.Message</CSharpValue>
+                  </InArgument>
+                </ui:LogMessage.Message>
               </ui:LogMessage>
             </Sequence>
           </ActivityAction>
         </Catch>
         <Catch x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="Catch`1_2">
           <ActivityAction x:TypeArguments="s:Exception">
-            <ActivityAction.Argument><DelegateInArgument x:TypeArguments="s:Exception" Name="exception" /></ActivityAction.Argument>
+            <ActivityAction.Argument>
+              <DelegateInArgument x:TypeArguments="s:Exception" Name="exception" />
+            </ActivityAction.Argument>
             <Sequence DisplayName="Handle exchange-rate failure" sap2010:WorkflowViewState.IdRef="Sequence_11">
               <Assign DisplayName="Set outer failure" sap2010:WorkflowViewState.IdRef="Assign_29">
-                <Assign.To><OutArgument x:TypeArguments="x:Boolean"><CSharpReference x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpReference_31">out_Success</CSharpReference></OutArgument></Assign.To>
-                <Assign.Value><InArgument x:TypeArguments="x:Boolean"><CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue_53">false</CSharpValue></InArgument></Assign.Value>
+                <Assign.To>
+                  <OutArgument x:TypeArguments="x:Boolean">
+                    <CSharpReference x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpReference_31">out_Success</CSharpReference>
+                  </OutArgument>
+                </Assign.To>
+                <Assign.Value>
+                  <InArgument x:TypeArguments="x:Boolean">
+                    <CSharpValue x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpValue_53">false</CSharpValue>
+                  </InArgument>
+                </Assign.Value>
               </Assign>
               <Assign DisplayName="Return exchange-rate error" sap2010:WorkflowViewState.IdRef="Assign_18">
-                <Assign.To><OutArgument x:TypeArguments="x:String"><CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference_20">out_ErrorMessage</CSharpReference></OutArgument></Assign.To>
-                <Assign.Value><InArgument x:TypeArguments="x:String"><CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue_31">"Rate service unavailable, try again later"</CSharpValue></InArgument></Assign.Value>
+                <Assign.To>
+                  <OutArgument x:TypeArguments="x:String">
+                    <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference_20">out_ErrorMessage</CSharpReference>
+                  </OutArgument>
+                </Assign.To>
+                <Assign.Value>
+                  <InArgument x:TypeArguments="x:String">
+                    <CSharpValue x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpValue_31">"Rate service unavailable, try again later"</CSharpValue>
+                  </InArgument>
+                </Assign.Value>
               </Assign>
-              <ui:LogMessage DisplayName="Log exchange-rate failure" Level="Error" sap2010:WorkflowViewState.IdRef="LogMessage_7">
-                <ui:LogMessage.Message><InArgument x:TypeArguments="x:Object"><CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue_32">"Rate service error: status=" + (httpResponse != null ? ((int)httpResponse.StatusCode).ToString(System.Globalization.CultureInfo.InvariantCulture) : "0") + "; message=Rate service unavailable, try again later"</CSharpValue></InArgument></ui:LogMessage.Message>
+              <ui:LogMessage DisplayName="Log exchange-rate failure" sap2010:WorkflowViewState.IdRef="LogMessage_7" Level="Error">
+                <ui:LogMessage.Message>
+                  <InArgument x:TypeArguments="x:Object">
+                    <CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue_32">"Rate service error: status=" + (httpResponse != null ? ((int)httpResponse.StatusCode).ToString(System.Globalization.CultureInfo.InvariantCulture) : "0") + "; message=Rate service unavailable, try again later"</CSharpValue>
+                  </InArgument>
+                </ui:LogMessage.Message>
               </ui:LogMessage>
             </Sequence>
           </ActivityAction>
         </Catch>
       </TryCatch.Catches>
     </TryCatch>
-    <ui:LogMessage DisplayName="Log exchange-rate outputs" Level="Info" sap2010:WorkflowViewState.IdRef="LogMessage_8">
+    <ui:LogMessage DisplayName="Log exchange-rate outputs" sap2010:WorkflowViewState.IdRef="LogMessage_8" Level="Info">
       <ui:LogMessage.Message>
-        <InArgument x:TypeArguments="x:Object"><CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue_33">"Exchange-rate outputs: Success=" + out_Success.ToString() + "; Rate=" + out_Rate.ToString(System.Globalization.CultureInfo.InvariantCulture) + "; RateDate=" + out_RateDate.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture) + "; ErrorMessage=" + (out_ErrorMessage ?? string.Empty)</CSharpValue></InArgument>
+        <InArgument x:TypeArguments="x:Object">
+          <CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue_33">"Exchange-rate outputs: Success=" + out_Success.ToString() + "; Rate=" + out_Rate.ToString(System.Globalization.CultureInfo.InvariantCulture) + "; RateDate=" + out_RateDate.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture) + "; ErrorMessage=" + (out_ErrorMessage ?? string.Empty)</CSharpValue>
+        </InArgument>
       </ui:LogMessage.Message>
     </ui:LogMessage>
   </Sequence>
