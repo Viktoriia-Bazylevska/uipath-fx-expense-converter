@@ -63,20 +63,20 @@
         {
           "name": "in_InputPath",
           "type": "System.String",
-          "required": false,
+          "required": true,
           "hasDefault": false
         },
         {
           "name": "in_OutputPath",
           "type": "System.String",
-          "required": false,
+          "required": true,
           "hasDefault": false
         },
         {
           "name": "in_TargetCurrency",
           "type": "System.String",
           "required": false,
-          "hasDefault": false
+          "hasDefault": true
         }
       ],
       "output": []

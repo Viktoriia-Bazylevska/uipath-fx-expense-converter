@@ -9,14 +9,10 @@
         "type": "object",
         "properties": {
           "in_InputPath": {
-            "type": "string",
-            "x-default-expression": "\"Data/Input/expenses.csv\"",
-            "default": "Data/Input/expenses.csv"
+            "type": "string"
           },
           "in_OutputPath": {
-            "type": "string",
-            "x-default-expression": "\"Data/Output/expenses_converted.csv\"",
-            "default": "Data/Output/expenses_converted.csv"
+            "type": "string"
           },
           "in_TargetCurrency": {
             "type": "string",

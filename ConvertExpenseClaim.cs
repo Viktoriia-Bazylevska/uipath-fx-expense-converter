@@ -8,11 +8,18 @@ namespace ExpenseClaimConverter
 {
     public class ConvertExpenseClaim : CodedWorkflow
     {
+        /// <summary>
+        /// Converts expense claims from a CSV file into the selected target currency and writes an enriched CSV result.
+        /// Invalid expense lines are marked as failed and excluded from the converted total.
+        /// </summary>
+        /// <param name="in_InputPath">Path to the source expenses CSV file. Provide an absolute path or a path relative to the robot's working directory.</param>
+        /// <param name="in_OutputPath">Path where the converted expenses CSV file is written. Provide an absolute path or a path relative to the robot's working directory.</param>
+        /// <param name="in_TargetCurrency">Three-letter ISO currency code used for conversion. Defaults to EUR.</param>
         [Workflow]
         public void Execute(
-            string in_InputPath = "Data/Input/expenses.csv",
-            string in_OutputPath = "Data/Output/expenses_converted.csv",
-            string in_TargetCurrency = "EUR")
+            [System.ComponentModel.Description("Path to the source expenses CSV file. Provide an absolute path or a path relative to the robot's working directory.")] string in_InputPath,
+            [System.ComponentModel.Description("Path where the converted expenses CSV file is written. Provide an absolute path or a path relative to the robot's working directory.")] string in_OutputPath,
+            [System.ComponentModel.Description("Three-letter ISO currency code used for conversion. Defaults to EUR.")] string in_TargetCurrency = "EUR")
         {
             int linesRead;
             var convertedCount = 0;

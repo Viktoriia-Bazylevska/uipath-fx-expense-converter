@@ -1,13 +1,14 @@
 <Activity mc:Ignorable="sap sap2010" x:Class="GetExchangeRate" xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:njl="clr-namespace:Newtonsoft.Json.Linq;assembly=Newtonsoft.Json" xmlns:s="clr-namespace:System;assembly=System.Private.CoreLib" xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation" xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation" xmlns:scg="clr-namespace:System.Collections.Generic;assembly=System.Private.CoreLib" xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=System.Private.CoreLib" xmlns:ui="http://schemas.uipath.com/workflow/activities" xmlns:uwah="clr-namespace:UiPath.Web.Activities.Http;assembly=UiPath.Web.Activities" xmlns:uwahm="clr-namespace:UiPath.Web.Activities.Http.Models;assembly=UiPath.Web.Activities" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <x:Members>
-    <x:Property Name="in_BaseCurrency" Type="InArgument(x:String)" />
-    <x:Property Name="in_QuoteCurrency" Type="InArgument(x:String)" />
-    <x:Property Name="in_RateDate" Type="InArgument(s:DateTime)" />
-    <x:Property Name="out_Success" Type="OutArgument(x:Boolean)" />
-    <x:Property Name="out_Rate" Type="OutArgument(x:Decimal)" />
-    <x:Property Name="out_RateDate" Type="OutArgument(s:DateTime)" />
-    <x:Property Name="out_ErrorMessage" Type="OutArgument(x:String)" />
+    <x:Property sap2010:Annotation.AnnotationText="Three-letter ISO currency code for the base currency. The value is trimmed and normalized to uppercase." Name="in_BaseCurrency" Type="InArgument(x:String)" />
+    <x:Property sap2010:Annotation.AnnotationText="Three-letter ISO currency code for the quote currency. The value is trimmed and normalized to uppercase." Name="in_QuoteCurrency" Type="InArgument(x:String)" />
+    <x:Property sap2010:Annotation.AnnotationText="Date for which the exchange rate is requested. Future dates are rejected." Name="in_RateDate" Type="InArgument(s:DateTime)" />
+    <x:Property sap2010:Annotation.AnnotationText="True when a valid exchange rate was obtained; otherwise false." Name="out_Success" Type="OutArgument(x:Boolean)" />
+    <x:Property sap2010:Annotation.AnnotationText="Exchange rate from the base currency to the quote currency." Name="out_Rate" Type="OutArgument(x:Decimal)" />
+    <x:Property sap2010:Annotation.AnnotationText="Date associated with the returned exchange rate. It may differ from the requested date for weekends or holidays." Name="out_RateDate" Type="OutArgument(s:DateTime)" />
+    <x:Property sap2010:Annotation.AnnotationText="Short error message when the lookup does not succeed; empty on success." Name="out_ErrorMessage" Type="OutArgument(x:String)" />
   </x:Members>
+  <sap2010:Annotation.AnnotationText>Gets an exchange rate for two currencies on a requested date, using the Frankfurter API when the currencies differ.</sap2010:Annotation.AnnotationText>
   <sap2010:ExpressionActivityEditor.ExpressionActivityEditor>C#</sap2010:ExpressionActivityEditor.ExpressionActivityEditor>
   <sap2010:WorkflowViewState.IdRef>ActivityBuilder_1</sap2010:WorkflowViewState.IdRef>
   <TextExpression.NamespacesForImplementation>
@@ -36,7 +37,6 @@
   </TextExpression.NamespacesForImplementation>
   <TextExpression.ReferencesForImplementation>
     <sco:Collection x:TypeArguments="AssemblyReference">
-      <AssemblyReference>GlobalVariablesT1PNoYwrqg</AssemblyReference>
       <AssemblyReference>Newtonsoft.Json</AssemblyReference>
       <AssemblyReference>System</AssemblyReference>
       <AssemblyReference>System.Activities</AssemblyReference>
@@ -58,7 +58,7 @@
       <AssemblyReference>UiPath.Web.Activities</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="Get exchange rate" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence sap2010:Annotation.AnnotationText="Returns the ECB reference exchange rate between two currencies on a date (Frankfurter API)." DisplayName="Get exchange rate" sap:VirtualizedContainerService.HintSize="824.4000000000001,1027.2" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <Sequence.Variables>
       <Variable x:TypeArguments="x:String" Name="apiBaseUrl" />
       <Variable x:TypeArguments="x:String" Name="baseCurrency" />
@@ -72,9 +72,10 @@
     <sap:WorkflowViewStateService.ViewState>
       <scg:Dictionary x:TypeArguments="x:String, x:Object">
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+        <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
-    <Assign DisplayName="Initialize success output" sap2010:WorkflowViewState.IdRef="Assign_1">
+    <Assign DisplayName="Initialize success output" sap:VirtualizedContainerService.HintSize="451.2,56.8" sap2010:WorkflowViewState.IdRef="Assign_1">
       <Assign.To>
         <OutArgument x:TypeArguments="x:Boolean">
           <CSharpReference x:TypeArguments="x:Boolean" sap2010:WorkflowViewState.IdRef="CSharpReference_1">out_Success</CSharpReference>
@@ -86,7 +87,7 @@
         </InArgument>
       </Assign.Value>
     </Assign>
-    <Assign DisplayName="Initialize rate output" sap2010:WorkflowViewState.IdRef="Assign_2">
+    <Assign DisplayName="Initialize rate output" sap:VirtualizedContainerService.HintSize="451.2,56.8" sap2010:WorkflowViewState.IdRef="Assign_2">
       <Assign.To>
         <OutArgument x:TypeArguments="x:Decimal">
           <CSharpReference x:TypeArguments="x:Decimal" sap2010:WorkflowViewState.IdRef="CSharpReference_2">out_Rate</CSharpReference>
@@ -98,7 +99,7 @@
         </InArgument>
       </Assign.Value>
     </Assign>
-    <Assign DisplayName="Initialize returned date" sap2010:WorkflowViewState.IdRef="Assign_3">
+    <Assign DisplayName="Initialize returned date" sap:VirtualizedContainerService.HintSize="451.2,56.8" sap2010:WorkflowViewState.IdRef="Assign_3">
       <Assign.To>
         <OutArgument x:TypeArguments="s:DateTime">
           <CSharpReference x:TypeArguments="s:DateTime" sap2010:WorkflowViewState.IdRef="CSharpReference_3">out_RateDate</CSharpReference>
@@ -110,7 +111,7 @@
         </InArgument>
       </Assign.Value>
     </Assign>
-    <Assign DisplayName="Clear error output" sap2010:WorkflowViewState.IdRef="Assign_4">
+    <Assign DisplayName="Clear error output" sap:VirtualizedContainerService.HintSize="451.2,56.8" sap2010:WorkflowViewState.IdRef="Assign_4">
       <Assign.To>
         <OutArgument x:TypeArguments="x:String">
           <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference_4">out_ErrorMessage</CSharpReference>
@@ -122,7 +123,7 @@
         </InArgument>
       </Assign.Value>
     </Assign>
-    <Assign DisplayName="Set Frankfurter API base URL" sap2010:WorkflowViewState.IdRef="Assign_5">
+    <Assign DisplayName="Set Frankfurter API base URL" sap:VirtualizedContainerService.HintSize="451.2,56.8" sap2010:WorkflowViewState.IdRef="Assign_5">
       <Assign.To>
         <OutArgument x:TypeArguments="x:String">
           <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference_5">apiBaseUrl</CSharpReference>
@@ -134,10 +135,15 @@
         </InArgument>
       </Assign.Value>
     </Assign>
-    <TryCatch DisplayName="Handle exchange-rate lookup" sap2010:WorkflowViewState.IdRef="TryCatch_1">
+    <TryCatch DisplayName="Handle exchange-rate lookup" sap:VirtualizedContainerService.HintSize="451.2,640.8" sap2010:WorkflowViewState.IdRef="TryCatch_1">
       <TryCatch.Try>
-        <Sequence DisplayName="Execute exchange-rate lookup" sap2010:WorkflowViewState.IdRef="Sequence_2">
-          <Assign DisplayName="Normalize base currency" sap2010:WorkflowViewState.IdRef="Assign_6">
+        <Sequence DisplayName="Execute exchange-rate lookup" sap:VirtualizedContainerService.HintSize="449.6,233.6" sap2010:WorkflowViewState.IdRef="Sequence_2">
+          <sap:WorkflowViewStateService.ViewState>
+            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+              <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            </scg:Dictionary>
+          </sap:WorkflowViewStateService.ViewState>
+          <Assign DisplayName="Normalize base currency" sap:VirtualizedContainerService.HintSize="416,56.8" sap2010:WorkflowViewState.IdRef="Assign_6">
             <Assign.To>
               <OutArgument x:TypeArguments="x:String">
                 <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference_6">baseCurrency</CSharpReference>
@@ -149,7 +155,7 @@
               </InArgument>
             </Assign.Value>
           </Assign>
-          <Assign DisplayName="Normalize quote currency" sap2010:WorkflowViewState.IdRef="Assign_7">
+          <Assign DisplayName="Normalize quote currency" sap:VirtualizedContainerService.HintSize="416,56.8" sap2010:WorkflowViewState.IdRef="Assign_7">
             <Assign.To>
               <OutArgument x:TypeArguments="x:String">
                 <CSharpReference x:TypeArguments="x:String" sap2010:WorkflowViewState.IdRef="CSharpReference_7">quoteCurrency</CSharpReference>
@@ -644,7 +650,12 @@
             <ActivityAction.Argument>
               <DelegateInArgument x:TypeArguments="ui:BusinessRuleException" Name="businessException" />
             </ActivityAction.Argument>
-            <Sequence DisplayName="Handle invalid request" sap2010:WorkflowViewState.IdRef="Sequence_10">
+            <Sequence DisplayName="Handle invalid request" sap:VirtualizedContainerService.HintSize="449.6,120" sap2010:WorkflowViewState.IdRef="Sequence_10">
+              <sap:WorkflowViewStateService.ViewState>
+                <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                  <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                </scg:Dictionary>
+              </sap:WorkflowViewStateService.ViewState>
               <Assign DisplayName="Set validation failure" sap2010:WorkflowViewState.IdRef="Assign_19">
                 <Assign.To>
                   <OutArgument x:TypeArguments="x:Boolean">
@@ -684,7 +695,12 @@
             <ActivityAction.Argument>
               <DelegateInArgument x:TypeArguments="s:Exception" Name="exception" />
             </ActivityAction.Argument>
-            <Sequence DisplayName="Handle exchange-rate failure" sap2010:WorkflowViewState.IdRef="Sequence_11">
+            <Sequence DisplayName="Handle exchange-rate failure" sap:VirtualizedContainerService.HintSize="449.6,120" sap2010:WorkflowViewState.IdRef="Sequence_11">
+              <sap:WorkflowViewStateService.ViewState>
+                <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                  <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                </scg:Dictionary>
+              </sap:WorkflowViewStateService.ViewState>
               <Assign DisplayName="Set outer failure" sap2010:WorkflowViewState.IdRef="Assign_29">
                 <Assign.To>
                   <OutArgument x:TypeArguments="x:Boolean">
@@ -721,7 +737,7 @@
         </Catch>
       </TryCatch.Catches>
     </TryCatch>
-    <ui:LogMessage DisplayName="Log exchange-rate outputs" sap2010:WorkflowViewState.IdRef="LogMessage_8" Level="Info">
+    <ui:LogMessage DisplayName="Log exchange-rate outputs" sap:VirtualizedContainerService.HintSize="451.2,48" sap2010:WorkflowViewState.IdRef="LogMessage_8" Level="Info">
       <ui:LogMessage.Message>
         <InArgument x:TypeArguments="x:Object">
           <CSharpValue x:TypeArguments="x:Object" sap2010:WorkflowViewState.IdRef="CSharpValue_33">"Exchange-rate outputs: Success=" + out_Success.ToString() + "; Rate=" + out_Rate.ToString(System.Globalization.CultureInfo.InvariantCulture) + "; RateDate=" + out_RateDate.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture) + "; ErrorMessage=" + (out_ErrorMessage ?? string.Empty)</CSharpValue>
