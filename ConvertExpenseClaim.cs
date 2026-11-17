@@ -30,14 +30,19 @@ namespace ExpenseClaimConverter
 
             try
             {
-                var targetCurrency = ExpenseCalculator.NormalizeCurrency(in_TargetCurrency);
+                var targetCurrency = ExpenseCalculator.NormalizeCurrency(
+                    string.IsNullOrWhiteSpace(in_TargetCurrency) ? "EUR" : in_TargetCurrency);
                 if (!ExpenseCalculator.IsValidCurrency(targetCurrency))
                 {
                     throw new BusinessRuleException("Invalid target currency: must be exactly 3 letters.");
                 }
 
-                var inputPath = ResolvePath(in_InputPath, "in_InputPath");
-                var outputPath = ResolvePath(in_OutputPath, "in_OutputPath");
+                var inputPath = ResolvePath(
+                    string.IsNullOrWhiteSpace(in_InputPath) ? "Data/Input/expenses.csv" : in_InputPath,
+                    "in_InputPath");
+                var outputPath = ResolvePath(
+                    string.IsNullOrWhiteSpace(in_OutputPath) ? "Data/Output/expenses_converted.csv" : in_OutputPath,
+                    "in_OutputPath");
                 Log("Expense conversion started: input=" + Path.GetFileName(inputPath) +
                     "; output=" + Path.GetFileName(outputPath) +
                     "; target=" + targetCurrency);
