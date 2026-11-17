@@ -1,3 +1,5 @@
+#pragma warning disable CS0436 // FX.Rates 1.0.2 exports source types in the consumer namespace; local project types are intentional.
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -73,20 +75,16 @@ namespace ExpenseClaimConverter
 
                         if (!rateCache.TryGetValue(cacheKey, out lookup))
                         {
-                            var exchangeRateOutputs = RunWorkflow(
-                                "GetExchangeRate.xaml",
-                                new Dictionary<string, object>
-                                {
-                                    { "in_BaseCurrency", validation.NormalizedCurrency },
-                                    { "in_QuoteCurrency", targetCurrency },
-                                    { "in_RateDate", validation.ExpenseDate }
-                                });
+                            var (success, rate, rateDate, errorMessage) = fXRates.GetExchangeRate(
+                                validation.NormalizedCurrency,
+                                targetCurrency,
+                                validation.ExpenseDate);
 
                             lookup = new RateLookupResult(
-                                Convert.ToBoolean(exchangeRateOutputs["out_Success"]),
-                                Convert.ToDecimal(exchangeRateOutputs["out_Rate"], System.Globalization.CultureInfo.InvariantCulture),
-                                Convert.ToDateTime(exchangeRateOutputs["out_RateDate"], System.Globalization.CultureInfo.InvariantCulture),
-                                exchangeRateOutputs["out_ErrorMessage"]?.ToString() ?? string.Empty);
+                                success,
+                                rate,
+                                rateDate,
+                                errorMessage ?? string.Empty);
                             rateCache.Add(cacheKey, lookup);
                         }
                     }

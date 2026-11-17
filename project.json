@@ -4,6 +4,7 @@
   "description": "ExpenseClaimConverter, Frankfurter API",
   "main": "ConvertExpenseClaim.cs",
   "dependencies": {
+    "FX.Rates": "[1.0.2]",
     "UiPath.CodedWorkflows": "[24.10.3]",
     "UiPath.Excel.Activities": "[3.6.1]",
     "UiPath.Mail.Activities": "[2.12.10]",
