@@ -16,13 +16,14 @@ expenses.csv → Main.xaml → ConvertExpenseClaim.cs → GetExchangeRate (FX.Ra
 | --- | --- | --- |
 | `Main.xaml` | Low-code workflow (entry point) | Holds the run settings and invokes the coded workflow |
 | `ConvertExpenseClaim.cs` | C# coded workflow | Reads the CSV, validates each line, gets rates (cached per currency and date), converts, rounds, writes the result with a total |
-| `ExpenseLine.cs`, `ExpenseCalculator.cs` | Code source files | Data model, validation and calculation logic |
+| `ExpenseLine.cs`, `ExpenseCalculator.cs`, `ExpenseCsv.cs` | Code source files | Data model, validation, calculation and CSV handling |
 | `ConvertExpenseClaimTests.cs` | Coded test case | Tests rounding, validation and totals |
+| `WorkflowCoverageTests.xaml` | Test case | Covers `Main.xaml` and `GetExchangeRate` without calling the API |
 | `GetExchangeRate` | Activity from the **FX.Rates** library | Calls the Frankfurter API with validation, retries, error handling and logging |
 
 ## Requirements
 
-- UiPath Studio STS 2026.0.199 or later (cross-platform project, C#)
+- UiPath Studio 26.10 or later (Windows project, C# expressions)
 - The **FX.Rates** library package installed (see `FX.Rates/README.md`)
 - Internet access to `api.frankfurter.dev`. No API key is needed.
 
@@ -55,7 +56,7 @@ The sample input has 8 made-up lines: 5 convert, 3 fail on purpose (unsupported 
 ## Error handling and logging
 
 - Input validation before any API call (3-letter currency codes, valid dates, positive amounts)
-- Try Catch around the HTTP call; Retry Scope for 5xx and timeouts only (3 attempts)
+- Try Catch around the HTTP call; Retry Scope (`NumberOfRetries = 3`, 2-second interval, 10-second timeout) for timeouts and HTTP 5xx only
 - Clear messages: "Invalid input", "Currency or date not supported", "Rate service unavailable, try again later"
 - Log Message at Info, Warning and Error levels; full URLs, responses and data rows are never logged
 
@@ -73,7 +74,7 @@ The sample input has 8 made-up lines: 5 convert, 3 fail on purpose (unsupported 
 
 - **Authentication:** not applicable. Frankfurter is a public, keyless API, and this repo contains no secrets.
 - Rates are ECB reference rates, not bank or card rates.
-- This is a proof of concept. Generated code was reviewed by a person; review it again before using it against live systems.
+- This is a proof of concept. Autopilot's own review rated it "Needs Improvement" (no Critical findings); see `docs/findings.md`. Review it before using it against live systems.
 
 ## Author
 
