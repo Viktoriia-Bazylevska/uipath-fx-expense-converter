@@ -66,7 +66,7 @@ Times are hands-on minutes I logged. Prompt counts come from the Autopilot sessi
 
 | Key question | Answer | Evidence |
 | --- | --- | --- |
-| Can coding agents accelerate API development? | **Yes** | About 1 hour of hands-on work plus 30–60 minutes of human review (1.5–2 hours), compared with an estimated 11–18 hours for a junior developer by hand. The Autopilot sessions spanned longer in elapsed time (see below) |
+| Can coding agents accelerate API development? | **Yes** | About 4.5–5 hours in total (preparation including the step-by-step guide ~2 h, build with Autopilot ~1 h, human review 30–60 min, documentation ~1 h), compared with an estimated 11–18 hours for a junior developer by hand |
 | What level of quality is produced? | **Good for a proof of concept, not production-ready without review** | Code built and validated cleanly (0 analyzer errors). 5 of 7 low-code cases passed first time, the coded test and the end-to-end run passed. Autopilot's own reviews found 3 High issues in GetExchangeRate and rated the whole project "Needs Improvement" (no Critical findings) |
 | How much manual correction is required? | **Moderate: low in the code, high in platform steps** | 46 prompts in total, about 3 times the 14 planned. Extra prompts went on analyzer fixes, an unclear prompt that changed the wrong file, and platform steps: Autopilot's publish failed and its Git push did not happen, so both were done by hand |
 | Can the generated solution be reused? | **Yes, with one cleanup** | `GetExchangeRate` was exported to the FX.Rates library (manual export) and is reused by `ConvertExpenseClaim.cs` through `fXRates.GetExchangeRate(...)`. The library still contains duplicate helper types, which cause CS0436 warnings in the consumer |
@@ -84,7 +84,19 @@ Times are hands-on minutes I logged. Prompt counts come from the Autopilot sessi
 
 A mid-level developer would need roughly 6–8 h. These are estimates, not measurements.
 
-**With Autopilot:** about 1 hour of hands-on work, plus 30–60 minutes of human review: 1.5–2 hours in total. The Autopilot sessions themselves ran on 16 Nov (16:48–21:21) and 17 Nov (10:32–14:27). That elapsed time includes Autopilot's processing, waiting for answers and breaks, so it is longer than the hands-on time.
+**With Autopilot (first build):**
+
+| Part | Time |
+| --- | --- |
+| Preparation: API choice, contracts, test data, step-by-step guide and prompts | ~2 h |
+| Build with Autopilot, including manual steps | ~1 h |
+| Human review: code, Autopilot's assumptions, results and logs | 30–60 min |
+| Documentation: findings, READMEs, prompts list | ~1 h |
+| **Total** | **≈ 4.5–5 h** |
+
+Compared with 11–18 hours by hand, this is roughly 2.5–4 times faster. Not included: personal learning time for UiPath Autopilot and its documentation, because an experienced developer would not need it, and the presentation. A repeat build can reuse the guide and prompts, so preparation would be shorter.
+
+The Autopilot sessions themselves ran on 16 Nov (16:48–21:21) and 17 Nov (10:32–14:27). That elapsed time includes Autopilot's processing, waiting for answers and breaks, so it is longer than the hands-on time.
 
 ## 6. Quality observations
 
